@@ -482,71 +482,7 @@ Academic project — Zetech University, Department of ICT and Engineering.
 ## Author
 
 **Wairimu David Kariuki**  
-Registration Number: DCF-01-0247/2025  
+
 Zetech University
 
 
-IMPLEMENTATION SUMMARY
-✅ Complete File Structure
-
-medical-imaging-system/
-├── config/
-│   ├── config.php
-│   ├── database.php
-│   └── constants.php
-├── core/
-│   ├── Database.php
-│   ├── Session.php
-│   ├── CSRF.php
-│   └── Auth.php
-├── models/
-│   ├── BaseModel.php
-│   ├── User.php
-│   ├── Patient.php
-│   ├── MedicalImage.php
-│   ├── AuditLog.php
-│   └── Backup.php
-├── controllers/
-│   ├── AuthController.php
-│   ├── DashboardController.php
-│   ├── PatientController.php
-│   ├── ImagingController.php
-│   ├── UserController.php
-│   ├── AuditController.php
-│   └── BackupController.php
-├── views/
-│   ├── layouts/
-│   │   ├── header.php
-│   │   ├── sidebar.php
-│   │   ├── footer.php
-│   │   └── main.php
-│   ├── auth/login.php
-│   ├── dashboard/index.php
-│   ├── patients/{index,create,view}.php
-│   ├── imaging/{index,upload,view}.php
-│   ├── users/index.php
-│   ├── audit/index.php
-│   ├── backups/index.php
-│   └── errors/{403,404,500}.php
-├── public/
-│   ├── css/style.css
-│   └── js/app.js
-├── uploads/medical_images/.htaccess
-├── backups/.htaccess
-├── logs/
-├── database/
-│   ├── database.sql
-│   └── setup_hashes.php
-├── index.php
-├── login.php
-├── logout.php
-├── .htaccess
-└── README.md
-
-✅ Default Login Details
-Role	Username	Password
-Admin	admin	ChangeMe123!
-Radiologist	radiologist	ChangeMe123!
-Technician	technician	ChangeMe123!
-Doctor	doctor	ChangeMe123!
-Records	records	ChangeMe123!
