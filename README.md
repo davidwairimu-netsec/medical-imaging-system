@@ -310,7 +310,7 @@ Academic project — Zetech University, Department of ICT and Engineering.
 ## Author
 
 **Wairimu David Kariuki**  
-Registration Number: DCF-01-0247/2025  
+  
 Zetech University
 
 
