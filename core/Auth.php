@@ -129,6 +129,7 @@ class Auth
         $permissions = [
             ROLE_ADMIN => [
                 'manage_users', 'view_audit', 'perform_backup',
+                'delete_image', 'request_delete_image', 'approve_deletion',
                 'register_patient', 'edit_patient', 'view_patient',
                 'upload_image', 'view_image', 'archive_image', 'search_records'
             ],
@@ -143,7 +144,7 @@ class Auth
             ],
             ROLE_TECHNICIAN => [
                 'register_patient', 'view_patient', 'upload_image',
-                'view_image', 'search_records'
+                'view_image', 'search_records', 'request_delete_image'
             ],
             ROLE_DOCTOR => [
                 'view_patient', 'view_image', 'search_records'

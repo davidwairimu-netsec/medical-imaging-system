@@ -86,6 +86,12 @@
         <?php if (Auth::isRole(ROLE_ADMIN)): ?>
         <div class="sidebar-divider">Administration</div>
 
+        <a href="<?= BASE_URL ?>/index.php?page=imaging&action=deletionRequests"
+           class="nav-link <?= ($currentPage ?? '') === 'imaging' && ($currentAction ?? '') === 'deletionRequests' ? 'active' : '' ?>">
+            <i class="bi bi-hourglass-split"></i>
+            <span>Deletion Requests</span>
+        </a>
+
         <a href="<?= BASE_URL ?>/index.php?page=users"
            class="nav-link <?= ($currentPage ?? '') === 'users' ? 'active' : '' ?>">
             <i class="bi bi-person-gear"></i>
