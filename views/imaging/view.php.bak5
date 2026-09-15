@@ -96,18 +96,11 @@ require APP_ROOT . '/views/layouts/main.php';
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="alert alert-warning small mb-3">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        <strong>Admin action:</strong> This will immediately archive the image.
-                        The deletion is recorded in the audit trail.
-                    </div>
                     <p>Are you sure you want to <strong>delete</strong> this image?</p>
                     <p class="text-muted small">The image will be archived and hidden from active records.</p>
                     <div class="mb-3">
-                        <label class="form-label">Reason for deletion <span class="text-danger">*</span></label>
-                        <textarea name="reason" class="form-control" rows="2" required 
-                                  placeholder="Explain why this image is being deleted..."></textarea>
-                        <div class="form-text">This reason will be recorded in the audit trail.</div>
+                        <label class="form-label">Reason (optional)</label>
+                        <textarea name="reason" class="form-control" rows="2" placeholder="Why is this image being deleted?"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -134,9 +127,7 @@ require APP_ROOT . '/views/layouts/main.php';
                     <p>Your request will be sent to an administrator for approval.</p>
                     <div class="mb-3">
                         <label class="form-label">Reason for deletion <span class="text-danger">*</span></label>
-                        <textarea name="reason" class="form-control" rows="3" required minlength="10"
-                                  placeholder="Explain in detail why this image should be deleted..."></textarea>
-                        <div class="form-text">Minimum 10 characters. This will be sent to the administrator for review.</div>
+                        <textarea name="reason" class="form-control" rows="3" required placeholder="Explain why this image should be deleted..."></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

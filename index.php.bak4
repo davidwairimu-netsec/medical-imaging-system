@@ -98,16 +98,12 @@ try {
         case 'imaging':
             $controller = new ImagingController();
             switch ($action) {
-                case 'upload':           $controller->upload(); break;
-                case 'view':             $controller->view(); break;
-                case 'serve':            $controller->serve(); break;
-                case 'download':         $controller->download(); break;
-                case 'archive':          $controller->archive(); break;
-                case 'delete':           $controller->delete(); break;
-                case 'requestDelete':    $controller->requestDelete(); break;
-                case 'deletionRequests': $controller->deletionRequests(); break;
-                case 'reviewDeletion':   $controller->reviewDeletion(); break;
-                default:                 $controller->index(); break;
+                case 'upload':   $controller->upload(); break;
+                case 'view':     $controller->view(); break;
+                case 'serve':    $controller->serve(); break;
+                case 'download': $controller->download(); break;
+                case 'archive':  $controller->archive(); break;
+                default:         $controller->index(); break;
             }
             break;
 
