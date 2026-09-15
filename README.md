@@ -303,13 +303,17 @@ Real-world deployment would require:
 
 ## License
 
+<<<<<<< HEAD
 Academic project —, Department of ICT and Engineering.
+=======
+Copyright (c) 2026 Wairimu David.
+>>>>>>> 6f2af89b3b7fb474c6f45bd545dfbbe66ab2368b
 
 ---
 
 ## Author
 
-**Wairimu David Kariuki**  
+**Wairimu David **  
   
 
 
@@ -475,14 +479,22 @@ Real-world deployment would require:
 
 ## License
 
+<<<<<<< HEAD
 Academic project —, Department of ICT and Engineering.
+=======
+Copyright (c) 2026 Wairimu David
+>>>>>>> 6f2af89b3b7fb474c6f45bd545dfbbe66ab2368b
 
 ---
 
 ## Author
 
-**Wairimu David Kariuki**  
+**Wairimu David **  
 
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> 6f2af89b3b7fb474c6f45bd545dfbbe66ab2368b
 
 

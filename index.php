@@ -54,7 +54,7 @@ set_exception_handler(function ($exception) {
 });
 
 // Check authentication (except for login)
-$publicPages = ['login'];
+$publicPages = ['login', 'auth'];
 
 $page = $_GET['page'] ?? 'dashboard';
 $action = $_GET['action'] ?? 'index';
@@ -133,6 +133,23 @@ try {
                 'createShift'         => $c->createShift(),
                 'reports'             => $c->reports(),
                 default                 => $c->index(),
+            };
+            break;
+
+        case 'auth':
+            $c = new ForgotPasswordController();
+            match($action) {
+                'forgot' => $c->forgot(),
+                'reset'  => $c->reset(),
+                default     => $c->forgot(),
+            };
+            break;
+
+        case 'profile':
+            $c = new ProfileController();
+            match($action) {
+                'changePassword' => $c->changePassword(),
+                default               => $c->changePassword(),
             };
             break;
 

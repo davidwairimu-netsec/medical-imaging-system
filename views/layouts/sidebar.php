@@ -75,6 +75,14 @@
         </a>
         <?php endif; ?>
 
+        <div class="sidebar-divider">Account</div>
+
+        <a href="<?= BASE_URL ?>/index.php?page=profile&action=changePassword"
+           class="nav-link <?= ($currentPage ?? '') === 'profile' ? 'active' : '' ?>">
+            <i class="bi bi-key"></i>
+            <span>Change Password</span>
+        </a>
+
         <?php if (Auth::isRole(ROLE_ADMIN)): ?>
         <div class="sidebar-divider">Administration</div>
 

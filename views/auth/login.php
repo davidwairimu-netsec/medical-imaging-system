@@ -110,6 +110,12 @@
                         </div>
                     </div>
 
+                    <div class="text-end mb-3">
+                        <a href="<?= BASE_URL ?>/index.php?page=auth&action=forgot" class="small text-decoration-none">
+                            <i class="bi bi-question-circle"></i> Forgot password?
+                        </a>
+                    </div>
+
                     <button type="submit" class="btn btn-primary w-100 btn-lg">
                         <i class="bi bi-box-arrow-in-right"></i> Sign In
                     </button>
