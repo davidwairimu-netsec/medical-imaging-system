@@ -303,15 +303,15 @@ Real-world deployment would require:
 
 ## License
 
-Academic project — Zetech University, Department of ICT and Engineering.
+Copyright (c) 2026 Wairimu David.
 
 ---
 
 ## Author
 
-**Wairimu David Kariuki**  
+**Wairimu David **  
   
-Zetech University
+
 
 
 ---
@@ -475,14 +475,14 @@ Real-world deployment would require:
 
 ## License
 
-Academic project — Zetech University, Department of ICT and Engineering.
+Copyright (c) 2026 Wairimu David
 
 ---
 
 ## Author
 
-**Wairimu David Kariuki**  
+**Wairimu David **  
 
-Zetech University
+
 
 
