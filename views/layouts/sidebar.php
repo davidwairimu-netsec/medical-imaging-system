@@ -115,6 +115,12 @@ if (Auth::hasPermission('approve_deletion')) {
             <span>Recently Deleted</span>
         </a>
 
+        <a href="<?= BASE_URL ?>/index.php?page=imaging&action=archived"
+           class="nav-link <?= ($currentPage ?? '') === 'imaging' && ($currentAction ?? '') === 'archived' ? 'active' : '' ?>">
+            <i class="bi bi-archive-fill"></i>
+            <span>Archived Images</span>
+        </a>
+
         <a href="<?= BASE_URL ?>/index.php?page=users"
            class="nav-link <?= ($currentPage ?? '') === 'users' ? 'active' : '' ?>">
             <i class="bi bi-person-gear"></i>
