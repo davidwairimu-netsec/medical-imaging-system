@@ -303,7 +303,7 @@ Real-world deployment would require:
 
 ## License
 
-Academic project — Zetech University, Department of ICT and Engineering.
+Academic project —, Department of ICT and Engineering.
 
 ---
 
@@ -311,7 +311,7 @@ Academic project — Zetech University, Department of ICT and Engineering.
 
 **Wairimu David Kariuki**  
   
-Zetech University
+
 
 
 ---
@@ -475,7 +475,7 @@ Real-world deployment would require:
 
 ## License
 
-Academic project — Zetech University, Department of ICT and Engineering.
+Academic project —, Department of ICT and Engineering.
 
 ---
 
@@ -483,6 +483,6 @@ Academic project — Zetech University, Department of ICT and Engineering.
 
 **Wairimu David Kariuki**  
 
-Zetech University
+
 
 
