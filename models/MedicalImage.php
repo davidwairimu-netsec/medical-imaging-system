@@ -29,7 +29,7 @@ class MedicalImage extends BaseModel
                 FROM medical_images mi
                 INNER JOIN patients p ON mi.patient_id = p.patient_id
                 LEFT JOIN users u ON mi.uploaded_by = u.user_id
-                WHERE 1=1";
+                WHERE mi.record_status = 'active'";
         $params = [];
 
         if (!empty($filters['search'])) {
