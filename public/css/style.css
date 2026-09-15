@@ -1,0 +1,340 @@
+/* ============================================================
+   Digital Medical Imaging Management System
+   Main Stylesheet
+   ============================================================ */
+
+:root {
+    --sidebar-width: 260px;
+    --primary: #0d6efd;
+    --sidebar-bg: #1a2332;
+    --sidebar-hover: #2a3a52;
+    --content-bg: #f4f6f9;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--content-bg);
+    color: #2c3e50;
+    margin: 0;
+}
+
+.app-wrapper { display: flex; min-height: 100vh; }
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--sidebar-bg);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-brand {
+    padding: 1.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar-brand i { color: #4dabf7; font-size: 1.5rem; }
+
+.sidebar-nav {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+}
+
+.sidebar-nav .nav-link {
+    color: rgba(255,255,255,0.75);
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+}
+
+.sidebar-nav .nav-link:hover {
+    background: var(--sidebar-hover);
+    color: #fff;
+}
+
+.sidebar-nav .nav-link.active {
+    background: var(--sidebar-hover);
+    color: #fff;
+    border-left-color: #4dabf7;
+}
+
+.sidebar-divider {
+    padding: 0.75rem 1.25rem 0.25rem;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.4);
+}
+
+.sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.user-details { display: flex; flex-direction: column; overflow: hidden; }
+.user-name { font-size: 0.85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
+
+/* ============================================================
+   MAIN CONTENT
+   ============================================================ */
+.main-content {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar {
+    background: #fff;
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #e3e8ef;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.page-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: #1a2332;
+}
+
+.content-area { padding: 1.5rem; flex: 1; }
+
+/* ============================================================
+   CARDS
+   ============================================================ */
+.card {
+    border: 1px solid #e3e8ef;
+    border-radius: 10px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.card-header {
+    background: #fafbfc;
+    border-bottom: 1px solid #e3e8ef;
+    padding: 0.85rem 1.25rem;
+}
+
+/* ============================================================
+   STAT CARDS
+   ============================================================ */
+.stat-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 1px solid #e3e8ef;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.stat-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.stat-card-primary .stat-icon { background: #e7f1ff; color: #0d6efd; }
+.stat-card-success .stat-icon { background: #d1e7dd; color: #198754; }
+.stat-card-info .stat-icon { background: #cff4fc; color: #0dcaf0; }
+.stat-card-warning .stat-icon { background: #fff3cd; color: #ffc107; }
+
+.stat-content { display: flex; flex-direction: column; }
+.stat-label { font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-value { font-size: 1.5rem; font-weight: 700; color: #1a2332; }
+.stat-sub { font-size: 0.75rem; color: #6c757d; }
+
+/* ============================================================
+   EMPTY STATE
+   ============================================================ */
+.empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.empty-state i { font-size: 3rem; color: #cbd5e1; display: block; margin-bottom: 1rem; }
+.empty-state h5 { color: #495057; }
+
+/* ============================================================
+   HEALTH ITEMS
+   ============================================================ */
+.health-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 0;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.health-item:last-child { border-bottom: none; }
+
+/* ============================================================
+   LOGIN PAGE
+   ============================================================ */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a2332 0%, #2a3a52 100%);
+    padding: 1rem;
+}
+
+.login-container { width: 100%; max-width: 420px; }
+
+.login-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.login-header { text-align: center; margin-bottom: 1.5rem; }
+.login-logo { font-size: 3rem; color: var(--primary); }
+.login-header h2 { font-size: 1.4rem; font-weight: 700; margin-top: 0.5rem; }
+
+.login-footer {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f0f2f5;
+    text-align: center;
+}
+
+.login-demo-info {
+    margin-top: 1rem;
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    font-size: 0.8rem;
+}
+
+.login-demo-info h6 { color: #4dabf7; }
+
+/* ============================================================
+   PATIENT PROFILE
+   ============================================================ */
+.patient-profile { text-align: center; margin-bottom: 1rem; }
+
+.patient-avatar-lg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0 auto 0.75rem;
+}
+
+/* ============================================================
+   IMAGE VIEWER
+   ============================================================ */
+.viewer-container {
+    background: #1a1a1a;
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    border-radius: 0 0 10px 10px;
+}
+
+.viewer-image {
+    max-width: 100%;
+    max-height: 600px;
+    transition: transform 0.2s ease;
+    cursor: grab;
+}
+
+/* ============================================================
+   TABLES
+   ============================================================ */
+.table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    font-weight: 600;
+    border-bottom: 2px solid #e3e8ef;
+}
+
+.table td { vertical-align: middle; font-size: 0.9rem; }
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 991.98px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .content-area { padding: 1rem; }
+    .stat-card { padding: 1rem; }
+    .stat-value { font-size: 1.2rem; }
+}

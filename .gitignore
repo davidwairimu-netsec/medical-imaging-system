@@ -1,0 +1,44 @@
+# ============================================================
+# Git ignore rules for Medical Imaging System
+# ============================================================
+
+# Uploaded patient images — never commit
+uploads/medical_images/*
+!uploads/medical_images/.htaccess
+!uploads/medical_images/.gitkeep
+
+# Database backups
+backups/*
+!backups/.htaccess
+!backups/.gitkeep
+
+# Logs
+logs/*
+!logs/.gitkeep
+
+# macOS
+.DS_Store
+._*
+
+# IDE
+.vscode/
+.idea/
+
+# Secrets
+.env
+*.env
+config/local.php
+
+# Temp files
+*.tmp
+*.log
+*.bak
+*.swp
+
+# One-off utility files
+debug_*.php
+check_hash.php
+test.php
+fix_*.php
+generate_*.php
+direct_login_test.php
