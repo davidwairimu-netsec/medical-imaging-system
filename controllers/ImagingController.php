@@ -107,6 +107,31 @@ class ImagingController
                     }
 
                     if (move_uploaded_file($file['tmp_name'], $filePath)) {
+                        if (!file_exists($filePath)) {
+                            error_log("Upload failure: file does not exist at {$filePath}");
+                            $errors['image_file'] = 'Storage integrity error: file not saved.';
+                            require APP_ROOT . '/views/imaging/upload.php';
+                            return;
+                        }
+
+                        $actualSize = filesize($filePath);
+                        if ($actualSize === 0 || $actualSize === false) {
+                            error_log("Upload failure: file is empty at {$filePath}");
+                            @unlink($filePath);
+                            $errors['image_file'] = 'Storage integrity error: file is empty.';
+                            require APP_ROOT . '/views/imaging/upload.php';
+                            return;
+                        }
+
+                        $actualHash = hash_file('sha256', $filePath);
+                        if ($actualHash !== $hash) {
+                            error_log("Upload corruption: hash mismatch at {$filePath}");
+                            @unlink($filePath);
+                            $errors['image_file'] = 'Storage integrity error: hash mismatch.';
+                            require APP_ROOT . '/views/imaging/upload.php';
+                            return;
+                        }
+
                         $imageId = MedicalImage::create([
                             'patient_id' => $data['patient_id'],
                             'imaging_type' => $data['imaging_type'],
@@ -191,17 +216,37 @@ class ImagingController
 
         if (!$image) {
             http_response_code(404);
+            header('Content-Type: text/plain');
+            echo 'Image record not found.';
             exit;
         }
 
-        $filePath = APP_ROOT . '/' . $image['file_path'];
+        $integrity = StorageIntegrity::checkImage($image);
 
-        if (!file_exists($filePath)) {
+        if ($integrity['status'] !== StorageIntegrity::STATUS_OK
+            && $integrity['status'] !== StorageIntegrity::STATUS_SIZE_MISMATCH) {
+
+            AuditLog::create([
+                'user_id'     => Auth::id(),
+                'action'      => 'IMAGE_INTEGRITY_FAILURE',
+                'entity_type' => 'medical_image',
+                'entity_id'   => $id,
+                'description' => "Integrity check failed for image #{$id}: {$integrity['message']}",
+            ]);
+
             http_response_code(404);
+            header('Content-Type: text/plain');
+            echo "Image file is unavailable.
+";
+            echo "Status: {$integrity['status']}
+";
+            echo "Details: {$integrity['message']}
+";
             exit;
         }
 
-        // Serve file securely
+        $filePath = APP_ROOT . '/' . ltrim($image['file_path'], '/');
+
         header('Content-Type: ' . $image['file_mime_type']);
         header('Content-Length: ' . filesize($filePath));
         header('Content-Disposition: inline; filename="' . basename($image['file_name']) . '"');

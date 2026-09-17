@@ -128,9 +128,15 @@ if (Auth::hasPermission('approve_deletion')) {
         </a>
 
         <a href="<?= BASE_URL ?>/index.php?page=audit"
-           class="nav-link <?= ($currentPage ?? '') === 'audit' ? 'active' : '' ?>">
+           class="nav-link <?= ($currentPage ?? '') === 'audit' && ($currentAction ?? '') !== 'integrity' ? 'active' : '' ?>">
             <i class="bi bi-journal-text"></i>
             <span>Audit Logs</span>
+        </a>
+
+        <a href="<?= BASE_URL ?>/index.php?page=audit&action=integrity"
+           class="nav-link <?= ($currentPage ?? '') === 'audit' && ($currentAction ?? '') === 'integrity' ? 'active' : '' ?>">
+            <i class="bi bi-shield-check"></i>
+            <span>Storage Integrity</span>
         </a>
 
         <a href="<?= BASE_URL ?>/index.php?page=backups"

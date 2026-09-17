@@ -122,7 +122,12 @@ try {
             break;
 
         case 'audit':
-            (new AuditController())->index();
+            $controller = new AuditController();
+            switch ($action) {
+                case 'integrity':    $controller->integrity();    break;
+                case 'fixIntegrity': $controller->fixIntegrity(); break;
+                default:             $controller->index();        break;
+            }
             break;
 
         case 'backups':
