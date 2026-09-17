@@ -80,33 +80,111 @@ class Patient extends BaseModel
         return $patient;
     }
 
-    public static function checkDuplicate(string $hospitalNumber, ?string $nationalId, ?string $phone): array
-    {
-        $duplicates = [];
+    /**
+     * Enhanced duplicate detection.
+     * Returns array of matches keyed by match type:
+     *   - exact_hospital_number (same hospital number)
+     *   - exact_national_id (same national ID)
+     *   - possible_name_dob (same first+last name AND same DOB)
+     *   - possible_phone (same phone number)
+     * Each value is ['confidence' => 'exact|high|medium', 'record' => [...]]
+     */
+    public static function checkDuplicate(
+        string $hospitalNumber,
+        ?string $nationalId = null,
+        ?string $phone = null,
+        ?string $firstName = null,
+        ?string $lastName = null,
+        ?string $dateOfBirth = null,
+        ?int $excludeId = null
+    ): array {
+        $db = self::db();
+        $matches = [];
 
+        // 1. Exact hospital number match
         if ($hospitalNumber) {
-            $stmt = self::db()->prepare(
-                "SELECT patient_id, first_name, last_name, hospital_number 
-                 FROM patients WHERE hospital_number = ? LIMIT 1"
-            );
-            $stmt->execute([$hospitalNumber]);
+            $sql = "SELECT patient_id, first_name, last_name, hospital_number, date_of_birth, phone
+                    FROM patients WHERE hospital_number = ?";
+            $params = [$hospitalNumber];
+            if ($excludeId) {
+                $sql .= " AND patient_id != ?";
+                $params[] = $excludeId;
+            }
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
             if ($row = $stmt->fetch()) {
-                $duplicates['hospital_number'] = $row;
+                $matches['exact_hospital_number'] = [
+                    'confidence' => 'exact',
+                    'message' => 'Same hospital number already exists',
+                    'record' => $row,
+                ];
             }
         }
 
+        // 2. Exact national ID match
         if ($nationalId) {
-            $stmt = self::db()->prepare(
-                "SELECT patient_id, first_name, last_name, national_id 
-                 FROM patients WHERE national_id = ? LIMIT 1"
-            );
-            $stmt->execute([$nationalId]);
+            $sql = "SELECT patient_id, first_name, last_name, hospital_number, national_id, date_of_birth
+                    FROM patients WHERE national_id = ?";
+            $params = [$nationalId];
+            if ($excludeId) {
+                $sql .= " AND patient_id != ?";
+                $params[] = $excludeId;
+            }
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
             if ($row = $stmt->fetch()) {
-                $duplicates['national_id'] = $row;
+                $matches['exact_national_id'] = [
+                    'confidence' => 'exact',
+                    'message' => 'Same national ID already exists',
+                    'record' => $row,
+                ];
             }
         }
 
-        return $duplicates;
+        // 3. Possible duplicate: same first+last name AND same DOB
+        if ($firstName && $lastName && $dateOfBirth) {
+            $sql = "SELECT patient_id, first_name, last_name, hospital_number, date_of_birth, phone
+                    FROM patients
+                    WHERE LOWER(first_name) = LOWER(?)
+                      AND LOWER(last_name) = LOWER(?)
+                      AND date_of_birth = ?";
+            $params = [$firstName, $lastName, $dateOfBirth];
+            if ($excludeId) {
+                $sql .= " AND patient_id != ?";
+                $params[] = $excludeId;
+            }
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            if ($row = $stmt->fetch()) {
+                $matches['possible_name_dob'] = [
+                    'confidence' => 'high',
+                    'message' => 'Another patient has the same name and date of birth',
+                    'record' => $row,
+                ];
+            }
+        }
+
+        // 4. Possible duplicate: same phone number
+        if ($phone) {
+            $sql = "SELECT patient_id, first_name, last_name, hospital_number, phone
+                    FROM patients WHERE phone = ?";
+            $params = [$phone];
+            if ($excludeId) {
+                $sql .= " AND patient_id != ?";
+                $params[] = $excludeId;
+            }
+            $stmt = $db->prepare($sql);
+            $stmt->execute($params);
+            if ($row = $stmt->fetch()) {
+                $matches['possible_phone'] = [
+                    'confidence' => 'medium',
+                    'message' => 'Another patient has the same phone number',
+                    'record' => $row,
+                ];
+            }
+        }
+
+        return $matches;
     }
 
     public static function getStats(): array

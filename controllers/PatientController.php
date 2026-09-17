@@ -66,14 +66,24 @@ class PatientController
                 $duplicates = Patient::checkDuplicate(
                     $data['hospital_number'],
                     $data['national_id'],
-                    $data['phone']
+                    $data['phone'],
+                    $data['first_name'],
+                    $data['last_name'],
+                    $data['date_of_birth']
                 );
 
                 if (!empty($duplicates)) {
-                    $errors['duplicate'] = 'A patient with this identifier already exists.';
-                    foreach ($duplicates as $field => $record) {
-                        $errors['duplicate'] .= " ({$field}: {$record['hospital_number']})";
+                    $hasExact = false;
+                    $messages = [];
+                    foreach ($duplicates as $key => $match) {
+                        $messages[] = $match['message'];
+                        if ($match['confidence'] === 'exact') {
+                            $hasExact = true;
+                        }
                     }
+                    $errors['duplicate'] = implode('; ', $messages);
+                    $errors['duplicate_severity'] = $hasExact ? 'exact' : 'possible';
+                    $errors['duplicate_records'] = $duplicates;
                 }
             }
 

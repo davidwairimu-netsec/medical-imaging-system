@@ -80,4 +80,16 @@ class AuditController
         header('Location: ' . BASE_URL . '/index.php?page=audit&action=integrity');
         exit;
     }
+
+    /**
+     * Admin: Verify the audit log hash chain.
+     */
+    public function verifyChainView(): void
+    {
+        $this->requireAdmin();
+        $result = AuditLog::verifyChain();
+
+        $pageTitle = 'Audit Log Integrity';
+        require APP_ROOT . '/views/audit/verify_chain.php';
+    }
 }

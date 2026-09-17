@@ -124,9 +124,10 @@ try {
         case 'audit':
             $controller = new AuditController();
             switch ($action) {
-                case 'integrity':    $controller->integrity();    break;
-                case 'fixIntegrity': $controller->fixIntegrity(); break;
-                default:             $controller->index();        break;
+                case 'integrity':     $controller->integrity();     break;
+                case 'fixIntegrity':  $controller->fixIntegrity();  break;
+                case 'verifyChain':   $controller->verifyChainView(); break;
+                default:              $controller->index();         break;
             }
             break;
 

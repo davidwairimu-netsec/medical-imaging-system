@@ -139,6 +139,12 @@ if (Auth::hasPermission('approve_deletion')) {
             <span>Storage Integrity</span>
         </a>
 
+        <a href="<?= BASE_URL ?>/index.php?page=audit&action=verifyChain"
+           class="nav-link <?= ($currentPage ?? '') === 'audit' && ($currentAction ?? '') === 'verifyChain' ? 'active' : '' ?>">
+            <i class="bi bi-link-45deg"></i>
+            <span>Audit Chain</span>
+        </a>
+
         <a href="<?= BASE_URL ?>/index.php?page=backups"
            class="nav-link <?= ($currentPage ?? '') === 'backups' ? 'active' : '' ?>">
             <i class="bi bi-database-fill-gear"></i>

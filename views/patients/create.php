@@ -8,10 +8,38 @@ require APP_ROOT . '/views/layouts/main.php';
         <h5 class="mb-0"><i class="bi bi-person-plus"></i> Patient Registration</h5>
     </div>
     <div class="card-body">
-        <?php if (!empty($errors['duplicate'])): ?>
+        <?php if (!empty($errors['duplicate_records'])): ?>
+            <?php $severity = $errors['duplicate_severity'] ?? 'possible'; ?>
+            <div class="alert alert-<?= $severity === 'exact' ? 'danger' : 'warning' ?>">
+                <h6 class="mb-2">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <strong><?= $severity === 'exact' ? 'Duplicate Detected' : 'Possible Duplicate Detected' ?></strong>
+                </h6>
+                <p class="mb-2"><?= htmlspecialchars($errors['duplicate']) ?></p>
+                <hr class="my-2">
+                <div class="small">
+                    <strong>Matching records found:</strong>
+                    <ul class="mb-0 mt-1">
+                        <?php foreach ($errors['duplicate_records'] as $key => $match): ?>
+                            <li>
+                                <span class="badge bg-<?= $match['confidence'] === 'exact' ? 'danger' : ($match['confidence'] === 'high' ? 'warning' : 'secondary') ?>">
+                                    <?= htmlspecialchars($match['confidence']) ?>
+                                </span>
+                                <strong><?= htmlspecialchars($match['record']['first_name'] . ' ' . $match['record']['last_name']) ?></strong>
+                                (Hosp: <?= htmlspecialchars($match['record']['hospital_number']) ?>)
+                                — <?= htmlspecialchars($match['message']) ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+                <p class="mt-2 mb-0 small text-muted">
+                    <i class="bi bi-info-circle"></i>
+                    If this is genuinely a different patient, you may proceed. The attempt will be logged for audit.
+                </p>
+            </div>
+        <?php elseif (!empty($errors['duplicate'])): ?>
             <div class="alert alert-warning">
-                <i class="bi bi-exclamation-triangle-fill"></i> 
-                <strong>Possible Duplicate Detected:</strong> <?= htmlspecialchars($errors['duplicate']) ?>
+                <i class="bi bi-exclamation-triangle-fill"></i> <?= htmlspecialchars($errors['duplicate']) ?>
             </div>
         <?php endif; ?>
         
