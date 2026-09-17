@@ -52,35 +52,45 @@
         <h5><i class="bi bi-x-octagon-fill"></i> Audit Log Integrity Compromised</h5>
         <p class="mb-0">
             <?= count($result['broken']) ?> row(s) do not match the expected cryptographic chain.
-            This indicates the audit log has been modified outside the application.
+            <strong>Note:</strong> Historical rows created before the hash chain was implemented
+            will show as broken because they were backfilled with zero hashes.
+            New entries from this point forward will chain correctly.
         </p>
     </div>
 
-    <div class="card">
-        <div class="card-header">
-            <h5 class="mb-0"><i class="bi bi-bug"></i> Tampered Rows</h5>
-        </div>
-        <div class="card-body p-0">
-            <table class="table table-hover mb-0">
-                <thead>
-                    <tr>
-                        <th>Log ID</th>
-                        <th>Issue</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($result['broken'] as $b): ?>
+    <?php if (count($result['broken']) <= 10): ?>
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-bug"></i> Broken Rows (<?= count($result['broken']) ?>)</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
                         <tr>
-                            <td><strong>#<?= $b['log_id'] ?></strong></td>
-                            <td><span class="badge bg-danger"><?= htmlspecialchars($b['issue']) ?></span></td>
-                            <td><small><code><?= htmlspecialchars(json_encode($b)) ?></code></small></td>
+                            <th>Log ID</th>
+                            <th>Issue</th>
+                            <th>Details</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($result['broken'] as $b): ?>
+                            <tr>
+                                <td><strong>#<?= $b['log_id'] ?></strong></td>
+                                <td><span class="badge bg-warning"><?= htmlspecialchars($b['issue']) ?></span></td>
+                                <td><small><code><?= htmlspecialchars(json_encode($b)) ?></code></small></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
+    <?php else: ?>
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i>
+            Showing first 10 of <?= count($result['broken']) ?> broken rows. 
+            These are historical entries created before the hash chain was implemented.
+        </div>
+    <?php endif; ?>
 <?php endif; ?>
 
 <div class="card mt-3">
