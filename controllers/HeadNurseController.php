@@ -57,9 +57,10 @@ class HeadNurseController
         $departmentId = (int) ($_GET['department'] ?? 0);
         $availability = $_GET['availability'] ?? '';
 
-        $sql = "SELECT n.*, d.department_name
+        $sql = "SELECT n.*, d.department_name, u.username
                 FROM nurses n
                 INNER JOIN departments d ON n.department_id=d.department_id
+                LEFT JOIN users u ON n.user_id = u.user_id
                 WHERE 1=1";
         $params = [];
 
@@ -456,5 +457,149 @@ class HeadNurseController
 
         $pageTitle = 'Nursing Reports';
         require APP_ROOT . '/views/head_nurse/reports.php';
+    }
+
+    /**
+     * Create a login account for an existing nurse
+     */
+    public function createNurseLogin(): void
+    {
+        $this->requirePermission('manage_nurses');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); exit; }
+        CSRF::verify();
+
+        $nurseId = (int) ($_POST['nurse_id'] ?? 0);
+        $username = trim($_POST['username'] ?? '');
+        $password = $_POST['password'] ?? 'ChangeMe123!';
+
+        $db = Database::getInstance();
+
+        $stmt = $db->prepare("SELECT * FROM nurses WHERE nurse_id = ?");
+        $stmt->execute([$nurseId]);
+        $nurse = $stmt->fetch();
+
+        if (!$nurse) {
+            Session::flash('error', 'Nurse record not found.');
+            header('Location: ' . BASE_URL . '/index.php?page=head_nurse&action=nurses');
+            exit;
+        }
+
+        if (!empty($nurse['user_id'])) {
+            Session::flash('warning', 'This nurse already has a login account.');
+            header('Location: ' . BASE_URL . '/index.php?page=head_nurse&action=nurses');
+            exit;
+        }
+
+        if (empty($username)) {
+            $username = strtolower($nurse['first_name'] . '.' . $nurse['last_name']);
+        }
+
+        // Validate username format
+        if (!preg_match('/^[a-zA-Z0-9._-]{3,50}$/', $username)) {
+            Session::flash('error', 'Username must be 3-50 characters (letters, numbers, dots, underscores, dashes).');
+            header('Location: ' . BASE_URL . '/index.php?page=head_nurse&action=nurses');
+            exit;
+        }
+
+        // Check username not taken
+        $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
+        $stmt->execute([$username]);
+        if ($stmt->fetchColumn() > 0) {
+            Session::flash('error', "Username '{$username}' already exists.");
+            header('Location: ' . BASE_URL . '/index.php?page=head_nurse&action=nurses');
+            exit;
+        }
+
+        // Email
+        $email = $nurse['email'] ?: strtolower($username) . '@hospital.demo';
+        $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->fetchColumn() > 0) {
+            $email = strtolower($username) . '.' . time() . '@hospital.demo';
+        }
+
+        try {
+            $db->beginTransaction();
+
+            $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
+
+            $stmt = $db->prepare("
+                INSERT INTO users (full_name, username, email, phone, password_hash, role_id, account_status)
+                VALUES (?, ?, ?, ?, ?, 7, 'active')
+            ");
+            $stmt->execute([
+                $nurse['first_name'] . ' ' . $nurse['last_name'],
+                $username,
+                $email,
+                $nurse['phone'],
+                $hash
+            ]);
+            $newUserId = (int) $db->lastInsertId();
+
+            $stmt = $db->prepare("UPDATE nurses SET user_id = ? WHERE nurse_id = ?");
+            $stmt->execute([$newUserId, $nurseId]);
+
+            $db->commit();
+
+            AuditLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'NURSE_LOGIN_CREATE',
+                'entity_type' => 'nurse',
+                'entity_id' => $nurseId,
+                'description' => "Created login for {$nurse['first_name']} {$nurse['last_name']} (username: {$username})",
+            ]);
+
+            Session::flash('success', "Login created for {$nurse['first_name']} {$nurse['last_name']}. Username: {$username}");
+
+        } catch (Exception $e) {
+            $db->rollBack();
+            error_log('Create nurse login failed: ' . $e->getMessage());
+            Session::flash('error', 'Failed to create login: ' . $e->getMessage());
+        }
+
+        header('Location: ' . BASE_URL . '/index.php?page=head_nurse&action=nurses');
+        exit;
+    }
+
+    /**
+     * Reset a nurse's password
+     */
+    public function resetNursePassword(): void
+    {
+        $this->requirePermission('manage_nurses');
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); exit; }
+        CSRF::verify();
+
+        $nurseId = (int) ($_POST['nurse_id'] ?? 0);
+        $newPassword = $_POST['new_password'] ?? 'ChangeMe123!';
+
+        $db = Database::getInstance();
+        $stmt = $db->prepare("SELECT user_id, first_name, last_name FROM nurses WHERE nurse_id = ?");
+        $stmt->execute([$nurseId]);
+        $nurse = $stmt->fetch();
+
+        if (!$nurse || !$nurse['user_id']) {
+            Session::flash('error', 'Nurse has no user account.');
+            header('Location: ' . BASE_URL . '/index.php?page=head_nurse&action=nurses');
+            exit;
+        }
+
+        $hash = password_hash($newPassword, PASSWORD_BCRYPT, ['cost' => 10]);
+        $db->prepare("UPDATE users SET password_hash = ?, failed_login_attempts = 0, account_status = 'active' WHERE user_id = ?")
+           ->execute([$hash, $nurse['user_id']]);
+
+        AuditLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'NURSE_PASSWORD_RESET',
+            'entity_type' => 'nurse',
+            'entity_id' => $nurseId,
+            'description' => "Reset password for {$nurse['first_name']} {$nurse['last_name']}",
+        ]);
+
+        Session::flash('success', "Password reset for {$nurse['first_name']} {$nurse['last_name']}.");
+        header('Location: ' . BASE_URL . '/index.php?page=head_nurse&action=nurses');
+        exit;
     }
 }

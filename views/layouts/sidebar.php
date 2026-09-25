@@ -23,7 +23,15 @@ if (Auth::hasPermission('approve_deletion')) {
             <span>Dashboard</span>
         </a>
 
-        <?php if (Auth::hasPermission('view_patient')): ?>
+        <?php if (Auth::isRole(ROLE_NURSE)): ?>
+        <a href="<?= BASE_URL ?>/index.php?page=nurse"
+           class="nav-link <?= ($currentPage ?? '') === 'nurse' ? 'active' : '' ?>">
+            <i class="bi bi-clipboard-pulse"></i>
+            <span>My Patients</span>
+        </a>
+        <?php endif; ?>
+
+        <?php if (Auth::hasPermission('view_patient') and !Auth::isRole(ROLE_NURSE)): ?>
         <a href="<?= BASE_URL ?>/index.php?page=patients"
            class="nav-link <?= ($currentPage ?? '') === 'patients' ? 'active' : '' ?>">
             <i class="bi bi-people"></i>

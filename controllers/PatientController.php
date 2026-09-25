@@ -287,6 +287,21 @@ class PatientController
             header('Location: ' . BASE_URL . '/login.php');
             exit;
         }
+
+        // NURSE_MUST_USE_NURSE_PORTAL — nurses use ?page=nurse for patient access
+        if (Auth::isRole(ROLE_NURSE)) {
+            AuditLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'NURSE_BLOCKED_PATIENT_CONTROLLER',
+                'entity_type' => 'security',
+                'entity_id' => null,
+                'description' => 'Nurse attempted to access general PatientController — redirected to nurse portal',
+            ]);
+            Session::flash('error', 'Nurses cannot access the general patient list. Use "My Patients" instead.');
+            header('Location: ' . BASE_URL . '/index.php?page=nurse');
+            exit;
+        }
+
         if (!Auth::hasPermission($permission)) {
             http_response_code(403);
             require APP_ROOT . '/views/errors/403.php';

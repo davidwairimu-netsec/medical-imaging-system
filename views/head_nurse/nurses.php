@@ -66,9 +66,31 @@
                                 </td>
                                 <td><?= (int) $n['max_patient_load'] ?></td>
                                 <td>
-                                    <a href="<?= BASE_URL ?>/index.php?page=head_nurse&action=editNurse&id=<?= $n['nurse_id'] ?>" class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="<?= BASE_URL ?>/index.php?page=head_nurse&action=editNurse&id=<?= $n['nurse_id'] ?>" 
+                                           class="btn btn-outline-primary" title="Edit nurse">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <?php if (empty($n['user_id'])): ?>
+                                            <button type="button" class="btn btn-outline-success" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#createLoginModal<?= $n['nurse_id'] ?>"
+                                                    title="Create login account">
+                                                <i class="bi bi-key"></i> Create Login
+                                            </button>
+                                        <?php else: ?>
+                                            <span class="badge bg-success align-self-center" 
+                                                  title="Has login: <?= htmlspecialchars($n['username'] ?? '') ?>">
+                                                <i class="bi bi-check-circle"></i> Has Login
+                                            </span>
+                                            <button type="button" class="btn btn-outline-warning" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#resetPwdModal<?= $n['nurse_id'] ?>"
+                                                    title="Reset password">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                            </button>
+                                        <?php endif; ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -78,5 +100,73 @@
         <?php endif; ?>
     </div>
 </div>
+
+<?php foreach ($nurses as $n): ?>
+    <?php if (empty($n['user_id'])): ?>
+    <div class="modal fade" id="createLoginModal<?= $n['nurse_id'] ?>" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="<?= BASE_URL ?>/index.php?page=head_nurse&action=createNurseLogin">
+                    <?= CSRF::field() ?>
+                    <input type="hidden" name="nurse_id" value="<?= $n['nurse_id'] ?>">
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title"><i class="bi bi-key"></i> Create Login Account</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Create a login for <strong><?= htmlspecialchars($n['first_name'] . ' ' . $n['last_name']) ?></strong> 
+                           (<?= htmlspecialchars($n['staff_number']) ?>)</p>
+                        <div class="mb-3">
+                            <label class="form-label">Username</label>
+                            <input type="text" name="username" class="form-control" 
+                                   value="<?= htmlspecialchars(strtolower($n['first_name'] . '.' . $n['last_name'])) ?>">
+                            <div class="form-text">Suggested: firstname.lastname</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Initial Password</label>
+                            <input type="text" name="password" class="form-control" value="ChangeMe123!">
+                            <div class="form-text">Nurse should change this after first login</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle"></i> Create Login
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php else: ?>
+    <div class="modal fade" id="resetPwdModal<?= $n['nurse_id'] ?>" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="<?= BASE_URL ?>/index.php?page=head_nurse&action=resetNursePassword">
+                    <?= CSRF::field() ?>
+                    <input type="hidden" name="nurse_id" value="<?= $n['nurse_id'] ?>">
+                    <div class="modal-header bg-warning">
+                        <h5 class="modal-title"><i class="bi bi-arrow-counterclockwise"></i> Reset Password</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Reset password for <strong><?= htmlspecialchars($n['first_name'] . ' ' . $n['last_name']) ?></strong></p>
+                        <div class="mb-3">
+                            <label class="form-label">New Password</label>
+                            <input type="text" name="new_password" class="form-control" value="ChangeMe123!">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-check-circle"></i> Reset Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+<?php endforeach; ?>
 
 <?php require APP_ROOT . '/views/layouts/footer.php'; ?>

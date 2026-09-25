@@ -149,6 +149,11 @@ class Auth
             ROLE_DOCTOR => [
                 'view_patient', 'view_image', 'search_records'
             ],
+            ROLE_NURSE => [
+                'nurse_portal',
+                'view_assigned_patients',
+                'view_medications',
+            ],
             ROLE_RECORDS => [
                 'register_patient', 'edit_patient', 'view_patient',
                 'view_image', 'search_records'

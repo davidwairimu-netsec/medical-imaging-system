@@ -154,7 +154,17 @@ try {
                 case 'shifts':             $controller->shifts();             break;
                 case 'createShift':        $controller->createShift();        break;
                 case 'reports':            $controller->reports();            break;
+                case 'createNurseLogin':   $controller->createNurseLogin();   break;
+                case 'resetNursePassword': $controller->resetNursePassword(); break;
                 default:                   $controller->index();              break;
+            }
+            break;
+
+        case 'nurse':
+            $controller = new NurseController();
+            switch ($action) {
+                case 'patient': $controller->patient(); break;
+                default:        $controller->index();   break;
             }
             break;
 

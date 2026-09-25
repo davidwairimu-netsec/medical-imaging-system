@@ -51,3 +51,7 @@ define('NURSE_ON_LEAVE', 'on_leave');
 // Assignment statuses
 define('ASSIGNMENT_ACTIVE', 'active');
 define('ASSIGNMENT_ENDED', 'ended');
+
+// Nurse role
+define('ROLE_NURSE', 'nurse');
+
