@@ -6,8 +6,9 @@
 
 ## Project Overview
 
-This is a **working academic prototype** of a Digital Medical Imaging Management System. It provides a centralised platform for managing patient medical imaging records, addressing the key problems of:
+A working academic prototype of a **Digital Medical Imaging Management System** — a centralised platform for managing patient medical imaging records.
 
+**Problems addressed:**
 - Missing medical scan records
 - Duplicate image records
 - Inconsistent patient information
@@ -17,20 +18,26 @@ This is a **working academic prototype** of a Digital Medical Imaging Management
 - Poor record organisation
 - Inadequate backup management
 
-> **IMPORTANT:** This system is an **imaging record management system**, NOT a complete hospital management system. It does NOT include pharmacy, billing, laboratory, inpatient administration, or automated medical diagnosis.
+> **Scope:** Imaging record management system only — NOT a full hospital management system.
 
 ---
 
-## Objectives
+## Author
 
-1. Improve storage of patient scan records
-2. Improve retrieval of patient scan records
-3. Reduce duplicate image records using SHA-256 hash detection
-4. Improve patient information consistency
-5. Improve security and access control through RBAC
-6. Provide auditability through comprehensive logging
-7. Improve data integrity through database constraints
-8. Provide backup management
+**Wairimu David Kariuki**  
+Department of ICT and Engineering
+
+---
+
+## System Status
+
+| Item | Value |
+|------|-------|
+| Status | ✅ Working — All features tested |
+| Installation Path | `/opt/lampp/htdocs/System 2/` |
+| Access URL | `http://localhost/System%202/login.php` |
+| Database | `medical_imaging_db` (MySQL/MariaDB) |
+| PHP Version | 8.0+ |
 
 ---
 
@@ -39,462 +46,258 @@ This is a **working academic prototype** of a Digital Medical Imaging Management
 | Layer | Technology |
 |-------|-----------|
 | Backend | PHP 8+ |
-| Database | MySQL 8+ (InnoDB) |
+| Database | MySQL 8+ / MariaDB 10.4+ (InnoDB) |
 | Server | Apache (XAMPP) |
 | Frontend | HTML5, CSS3, JavaScript, Bootstrap 5 |
 | Charts | Chart.js 4 |
 | Icons | Bootstrap Icons |
 | Database Access | PDO with prepared statements |
+| Architecture | MVC-inspired modular |
+
+---
+
+## User Roles (7)
+
+| Role | Access Level |
+|------|--------------|
+| Admin | Full system access |
+| Head Nurse | Nursing module + patient viewing |
+| Nurse | Read-only, assigned patients only |
+| Radiologist | Imaging + patient viewing |
+| Technician | Imaging + patient registration |
+| Doctor | View-only across patients |
+| Records Officer | Patient registration |
 
 ---
 
 ## Features
 
-### Core Modules
+### Authentication & Security
+- bcrypt password hashing (cost 10)
+- CSRF protection on all POST forms
+- Session management (HttpOnly, SameSite=Strict)
+- Account lockout after 5 failed attempts
+- Session timeout (30 min idle)
+- Change Password (all users)
+- Forgot Password with SHA-256 token (1-hour expiry)
+- Email enumeration protection
 
-1. **Authentication** — Secure login with bcrypt hashing, session management, CSRF protection, and account lockout.
-2. **Role-Based Access Control** — Five roles (Admin, Radiologist, Technician, Doctor, Records Officer) with least-privilege permissions.
-3. **Patient Management** — Register, view, edit, search, archive patients.
-4. **Medical Imaging** — Upload, store, retrieve, view, download, archive medical images.
-5. **Duplicate Detection** — SHA-256 hash comparison prevents duplicate image records.
-6. **Image Viewer** — Zoom, rotate, reset, fit-to-screen controls.
-7. **Patient Imaging History** — Chronological view of all patient scans.
-8. **Advanced Search** — Multi-criteria search with pagination.
-9. **Audit Logging** — Comprehensive audit trail of all system actions.
-10. **Backup Management** — Database backup creation and download.
-11. **Dashboard** — Statistics, charts, recent activity, system health.
+### Role-Based Access Control
+- 7 roles with granular permissions
+- Server-side checks on every action
+- Sidebar links conditionally rendered
+- Direct URL access prevention
+- 403 Access Denied page
+- Least-privilege principle enforced
+
+### Patient Management
+- Register/edit/archive patients
+- Unique hospital number validation
+- Enhanced duplicate detection (exact/high/medium confidence)
+- Search by name, hospital no., ID, phone
+
+### Medical Imaging
+- JPEG/PNG upload (up to 10 MB)
+- SHA-256 duplicate detection
+- X-ray, CT, MRI, Ultrasound support
+- Multi-layer file validation
+- Random secure filenames (32 hex chars)
+- Image viewer with zoom, rotate, reset
+
+### Deletion Workflow
+- Admin: direct deletion with required reason
+- Technician: request deletion (needs admin approval)
+- Reason mandatory (min 10 chars)
+- Full audit trail
+
+### Archived Images
+- Recently Deleted tab (last 200 with reasons)
+- Archived Images tab (all, with search)
+- Restore functionality
+
+### Storage Integrity
+- StorageIntegrity class verifies DB ↔ disk
+- Detects missing/empty/orphaned files
+- serve() checks file exists before readfile
+- Admin dashboard with archive actions
+
+### Audit Logging
+- Comprehensive event tracking
+- SHA-256 hash chain for tamper detection
+- Audit Chain admin page
+
+### Backup & Restore
+- Full backup: DB dump + images + manifest
+- SHA-256 checksum verification
+- Restore with RESTORE confirmation
+
+### Head Nurse Module
+- Nursing dashboard with statistics
+- Manage nurses (add/edit)
+- Create login for nurses
+- Reset nurse passwords
+- Nurse assignments + workload + shifts
+
+### Nurse Portal (Read-Only)
+- Nurses log in with own credentials
+- My Patients: only assigned patients
+- View demographics, medications, imaging
+- Cannot add, edit, or delete
+- Unauthorized access logged
+
+---
+
+## Database Tables (15)
+
+**Core:** roles, users, patients, medical_images, audit_logs, backups
+
+**Nursing:** departments, nurses, nurse_doctor_assignments, nurse_patient_assignments, nurse_shifts, nurse_attendance
+
+**Additional:** medications, password_resets, deletion_requests
 
 ---
 
 ## System Architecture
-
-Presentation Layer (HTML/CSS/JS/Bootstrap 5)
+Presentation Layer (HTML5 / CSS3 / JavaScript / Bootstrap 5)
 ↓
-Application Layer (PHP Controllers)
+Application Layer (PHP Controllers + Core Services)
 ↓
-Data Access Layer (PDO Models)
+Data Access Layer (PDO Models with prepared statements)
 ↓
-Database Layer (MySQL with InnoDB)
+Database Layer (MySQL/MariaDB with InnoDB)
 
 
 ---
 
-## Database Structure
+## Installation (Linux)
+
+```bash
+# 1. Clone
+cd /opt/lampp/htdocs
+sudo git clone https://github.com/davidwairimu-netsec/medical-imaging-system.git "System 2"
+sudo chown -R $USER:$USER "System 2"
+
+# 2. Permissions
+cd "System 2"
+chmod -R 777 uploads backups logs
+
+# 3. Database
+/opt/lampp/bin/mysql -u root -e "CREATE DATABASE medical_imaging_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+/opt/lampp/bin/mysql -u root medical_imaging_db < database/database.sql
+
+# 4. Extended schema (nursing, auth, integrity tables)
+
+# 5. Start XAMPP
+sudo /opt/lampp/lampp start
+Open: http://localhost/System%202/login.php
+
+Demo Credentials
+Role	Username	Password
+Administrator	admin	ChangeMe123!
+Head Nurse	headnurse	ChangeMe123!
+Nurse	nurse	ChangeMe123!
+Radiologist	radiologist	ChangeMe123!
+Technician	technician	ChangeMe123!
+Doctor	doctor	ChangeMe123!
+Records Officer	records	ChangeMe123!
+⚠️ Change all demo passwords before deployment.
+
+Security Features
+Feature	Implementation
+Password Storage	bcrypt cost 10
+SQL Injection	PDO prepared statements
+XSS	htmlspecialchars()
+CSRF	Token verification
+Session Security	HttpOnly, SameSite=Strict
+File Upload	Multi-layer validation
+Filename Handling	Random 32-hex names
+Access Control	RBAC server-side
+Audit Trail	SHA-256 hash chain
+Account Lockout	5 failures = locked
+File Storage	Outside web root, PHP disabled
+Testing Checklist
+Authentication
+☑ Valid/invalid login
+☑ Logout destroys session
+☑ Session timeout works
+☑ Account locks after 5 failures
+☑ Change + forgot password
+Authorisation
+☑ Role-based sidebar
+☑ URL manipulation blocked
+☑ 403 page works
+☑ Nurse cannot access general patients
+Imaging
+☑ Upload validation
+☑ Duplicate detection
+☑ Delete workflow
+☑ Restore from archive
+Security
+☑ SQL injection blocked
+☑ XSS escaped
+☑ CSRF required
+☑ Upload directory safe
+Nursing
+☑ Nurse management
+☑ Login creation
+☑ Password reset
+☑ Read-only enforcement
+Troubleshooting
+Issue	Solution
+DB connection failed	Use 127.0.0.1 not localhost
+Upload fails	chmod 777 uploads/
+Backup fails	Check /opt/lampp/bin/mysqldump
+403 errors	Check role in core/Auth.php
+Login fails	Regenerate password hashes
+Empty dropdowns	Insert sample data
+Limitations
+No DICOM support (JPEG/PNG only)
+
+Not a diagnostic viewer
+
+No cloud storage
+
+No HL7/FHIR interoperability
+
+No encryption at rest
+
+Manual backups only
+
+No 2FA
+
+Single-tenant
+
+Academic prototype only
+
+Future Improvements
+Full DICOM support + PACS integration
 
-| Table | Purpose |
-|-------|---------|
-| `roles` | Role definitions |
-| `users` | System users |
-| `patients` | Patient records |
-| `medical_images` | Imaging metadata |
-| `audit_logs` | Security audit trail |
-| `backups` | Backup history |
+HL7/FHIR interoperability
 
-### Key Relationships
+Cloud storage
 
-- One user belongs to one role
-- One user can upload many medical images
-- One patient can have many medical images
-- One user can create many audit log entries
+Advanced image viewer
 
----
+Mobile application
 
-## Installation
+Multi-hospital support
 
-### Prerequisites
+Automated backups
 
-- Windows/Linux/macOS
-- XAMPP (or equivalent with Apache + MySQL + PHP 8+)
-- Web browser
+Two-factor authentication
 
-### Step-by-Step
+Encryption at rest + in transit
 
-1. **Install XAMPP**
-   - Download from https://www.apachefriends.org/
-   - Install and start Apache and MySQL from the XAMPP Control Panel.
+EHR integration
 
-2. **Copy Project Files**
+AI-assisted classification
 
-Copy the medical-imaging-system folder to:
-C:\xampp\htdocs\medical-imaging-system
+Security & Ethics Warning
+This is an academic healthcare prototype. NOT for production clinical use.
 
+Use fictional patient data only.
 
-3. **Create Database**
-- Open http://localhost/phpmyadmin
-- Click "Import"
-- Select `database/database.sql`
-- Click "Go"
+License
+Academic project — evaluation and demonstration only. Not licensed for production use.
 
-4. **Generate Password Hashes**
-- Visit http://localhost/medical-imaging-system/database/setup_hashes.php
-- Copy the generated SQL UPDATE statements
-- Run them in phpMyAdmin's SQL tab
-
-5. **Configure Database** (if needed)
-- Edit `config/database.php` with your MySQL credentials
-- Default XAMPP: username `root`, password empty
-
-6. **Set Directory Permissions**
-- Ensure `uploads/`, `backups/`, and `logs/` are writable
-
-7. **Open Application**
-
-http://localhost/medical-imaging-system/
-
-
----
-
-## Demo Credentials
-
-| Role | Username | Password |
-|------|----------|----------|
-| Administrator | admin | ChangeMe123! |
-| Radiologist | radiologist | ChangeMe123! |
-| Technician | technician | ChangeMe123! |
-| Doctor | doctor | ChangeMe123! |
-| Records Officer | records | ChangeMe123! |
-
-> **CRITICAL:** Change all demo passwords before any real deployment!
-
----
-
-## Security Features
-
-| Feature | Implementation |
-|---------|---------------|
-| Password Storage | bcrypt with cost 10 |
-| SQL Injection | PDO prepared statements everywhere |
-| XSS | HTML escaping on all output |
-| CSRF | Token-based verification on POST |
-| Session Security | HttpOnly, SameSite=Strict, regeneration |
-| File Upload | Extension whitelist, MIME validation, SHA-256 |
-| Access Control | Role-based permission checks |
-| Audit Trail | Comprehensive logging |
-| Account Lockout | 5 failed attempts = locked |
-| File Storage | Outside web root, no execution |
-
----
-
-## Duplicate Detection
-
-The system calculates a **SHA-256 hash** of every uploaded image file. Before accepting an upload:
-
-1. Hash is computed from file contents
-2. Database is searched for existing identical hash
-3. If duplicate found:
-- Upload is blocked
-- Existing record is shown
-- Attempt is logged in audit trail
-4. Only unique images are stored
-
-This ensures **exact duplicate images** are detected. Note: this detects identical files, not visually similar images.
-
----
-
-## Backup Process
-
-Administrators can create database backups from the Backup Management page. The system uses `mysqldump` to export the database.
-
-> **Production Note:** For real clinical deployment, use automated backup infrastructure with off-site storage, encryption, and tested recovery procedures. This prototype's backup function is for demonstration.
-
----
-
-## Testing Checklist
-
-### Authentication
-- [ ] Valid login redirects to dashboard
-- [ ] Invalid login shows error
-- [ ] Logout destroys session
-- [ ] Disabled account cannot log in
-- [ ] Session timeout works
-
-### Authorisation
-- [ ] Admin can access all pages
-- [ ] Doctor cannot access user management
-- [ ] Technician cannot access audit logs
-- [ ] URL manipulation is blocked
-
-### Patient Management
-- [ ] Create patient
-- [ ] Edit patient
-- [ ] Search patient
-- [ ] Duplicate patient warning
-- [ ] Archive patient
-
-### Imaging
-- [ ] Upload valid image
-- [ ] Reject invalid file type
-- [ ] Reject oversized file
-- [ ] Duplicate image warning
-- [ ] View image in viewer
-- [ ] Download image
-- [ ] Archive image
-
-### Security
-- [ ] SQL injection attempt fails
-- [ ] XSS attempt is escaped
-- [ ] CSRF token required
-- [ ] Direct file access blocked
-
----
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Database connection failed | Check `config/database.php` credentials |
-| Upload fails | Ensure `uploads/` is writable |
-| Backup fails | Ensure `mysqldump` is in system PATH |
-| Session issues | Clear browser cookies |
-| 403 errors | Check role permissions |
-
----
-
-## Limitations
-
-1. **No DICOM support** — Only JPEG/PNG. DICOM is a future enhancement.
-2. **Not a diagnostic viewer** — Image viewer is academic prototype only.
-3. **No cloud storage** — Local file storage only.
-4. **No HL7/FHIR** — No interoperability with other systems.
-5. **No encryption at rest** — Files stored unencrypted.
-6. **Manual backup only** — No automated scheduling.
-7. **No 2FA** — Single-factor authentication only.
-
----
-
-## Future Improvements
-
-- Full DICOM support
-- PACS integration
-- HL7/FHIR interoperability
-- Cloud storage (AWS S3, Azure Blob)
-- Advanced image viewer (windowing, measurements)
-- Mobile application
-- Multi-hospital support
-- Automated backup scheduling
-- Two-factor authentication
-- Encryption at rest and in transit
-- Electronic Health Record integration
-- AI-assisted image classification
-
----
-
-## Security & Ethics Warning
-
-This is an **academic healthcare prototype**. Do NOT claim it is suitable for production clinical deployment.
-
-Real-world deployment would require:
-
-- Formal security assessment
-- Data protection compliance (GDPR, HIPAA, Kenya DPA)
-- Clinical governance
-- Professional infrastructure
-- Secure networking
-- Encryption (at rest and in transit)
-- Backup and disaster recovery
-- Access governance
-- Security monitoring
-- Regulatory approval
-- Clinical validation
-
-**Use fictional patient data only.** Never upload real patient information to this prototype.
-
----
-
-## License
-
-<<<<<<< HEAD
-Academic project —, Department of ICT and Engineering.
-=======
-Copyright (c) 2026 Wairimu David.
->>>>>>> 6f2af89b3b7fb474c6f45bd545dfbbe66ab2368b
-
----
-
-## Author
-
-**Wairimu David **  
-  
-
-
-
----
-
-## Demo Credentials
-
-| Role | Username | Password |
-|------|----------|----------|
-| Administrator | admin | ChangeMe123! |
-| Radiologist | radiologist | ChangeMe123! |
-| Technician | technician | ChangeMe123! |
-| Doctor | doctor | ChangeMe123! |
-| Records Officer | records | ChangeMe123! |
-
-> **CRITICAL:** Change all demo passwords before any real deployment!
-
----
-
-## Security Features
-
-| Feature | Implementation |
-|---------|---------------|
-| Password Storage | bcrypt with cost 10 |
-| SQL Injection | PDO prepared statements everywhere |
-| XSS | HTML escaping on all output |
-| CSRF | Token-based verification on POST |
-| Session Security | HttpOnly, SameSite=Strict, regeneration |
-| File Upload | Extension whitelist, MIME validation, SHA-256 |
-| Access Control | Role-based permission checks |
-| Audit Trail | Comprehensive logging |
-| Account Lockout | 5 failed attempts = locked |
-| File Storage | Outside web root, no execution |
-
----
-
-## Duplicate Detection
-
-The system calculates a **SHA-256 hash** of every uploaded image file. Before accepting an upload:
-
-1. Hash is computed from file contents
-2. Database is searched for existing identical hash
-3. If duplicate found:
-- Upload is blocked
-- Existing record is shown
-- Attempt is logged in audit trail
-4. Only unique images are stored
-
-This ensures **exact duplicate images** are detected. Note: this detects identical files, not visually similar images.
-
----
-
-## Backup Process
-
-Administrators can create database backups from the Backup Management page. The system uses `mysqldump` to export the database.
-
-> **Production Note:** For real clinical deployment, use automated backup infrastructure with off-site storage, encryption, and tested recovery procedures. This prototype's backup function is for demonstration.
-
----
-
-## Testing Checklist
-
-### Authentication
-- [ ] Valid login redirects to dashboard
-- [ ] Invalid login shows error
-- [ ] Logout destroys session
-- [ ] Disabled account cannot log in
-- [ ] Session timeout works
-
-### Authorisation
-- [ ] Admin can access all pages
-- [ ] Doctor cannot access user management
-- [ ] Technician cannot access audit logs
-- [ ] URL manipulation is blocked
-
-### Patient Management
-- [ ] Create patient
-- [ ] Edit patient
-- [ ] Search patient
-- [ ] Duplicate patient warning
-- [ ] Archive patient
-
-### Imaging
-- [ ] Upload valid image
-- [ ] Reject invalid file type
-- [ ] Reject oversized file
-- [ ] Duplicate image warning
-- [ ] View image in viewer
-- [ ] Download image
-- [ ] Archive image
-
-### Security
-- [ ] SQL injection attempt fails
-- [ ] XSS attempt is escaped
-- [ ] CSRF token required
-- [ ] Direct file access blocked
-
----
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| Database connection failed | Check `config/database.php` credentials |
-| Upload fails | Ensure `uploads/` is writable |
-| Backup fails | Ensure `mysqldump` is in system PATH |
-| Session issues | Clear browser cookies |
-| 403 errors | Check role permissions |
-
----
-
-## Limitations
-
-1. **No DICOM support** — Only JPEG/PNG. DICOM is a future enhancement.
-2. **Not a diagnostic viewer** — Image viewer is academic prototype only.
-3. **No cloud storage** — Local file storage only.
-4. **No HL7/FHIR** — No interoperability with other systems.
-5. **No encryption at rest** — Files stored unencrypted.
-6. **Manual backup only** — No automated scheduling.
-7. **No 2FA** — Single-factor authentication only.
-
----
-
-## Future Improvements
-
-- Full DICOM support
-- PACS integration
-- HL7/FHIR interoperability
-- Cloud storage (AWS S3, Azure Blob)
-- Advanced image viewer (windowing, measurements)
-- Mobile application
-- Multi-hospital support
-- Automated backup scheduling
-- Two-factor authentication
-- Encryption at rest and in transit
-- Electronic Health Record integration
-- AI-assisted image classification
-
----
-
-## Security & Ethics Warning
-
-This is an **academic healthcare prototype**. Do NOT claim it is suitable for production clinical deployment.
-
-Real-world deployment would require:
-
-- Formal security assessment
-- Data protection compliance (GDPR, HIPAA, Kenya DPA)
-- Clinical governance
-- Professional infrastructure
-- Secure networking
-- Encryption (at rest and in transit)
-- Backup and disaster recovery
-- Access governance
-- Security monitoring
-- Regulatory approval
-- Clinical validation
-
-**Use fictional patient data only.** Never upload real patient information to this prototype.
-
----
-
-## License
-
-<<<<<<< HEAD
-Academic project —, Department of ICT and Engineering.
-=======
-Copyright (c) 2026 Wairimu David
->>>>>>> 6f2af89b3b7fb474c6f45bd545dfbbe66ab2368b
-
----
-
-## Author
-
-**Wairimu David **  
-
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 6f2af89b3b7fb474c6f45bd545dfbbe66ab2368b
-
-
+End of README
