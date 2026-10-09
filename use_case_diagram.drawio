@@ -1,0 +1,213 @@
+<mxfile host="app.diagrams.net" modified="2026-01-01T00:00:00.000Z" agent="drawio" version="22.0.0">
+  <diagram name="Use Case Diagram" id="usecase1">
+    <mxGraphModel dx="1800" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- TITLE -->
+        <mxCell id="title" value="Use Case Diagram - Digital Medical Imaging Management System" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="1000" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- SYSTEM BOUNDARY -->
+        <mxCell id="sysboundary" value="Digital Medical Imaging Management System" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#333333;strokeWidth=3;dashed=1;verticalAlign=top;fontSize=14;fontStyle=1;spacingTop=10;" vertex="1" parent="1">
+          <mxGeometry x="380" y="100" width="1080" height="1180" as="geometry" />
+        </mxCell>
+
+        <!-- ============================= -->
+        <!-- ACTORS (Left side - stick figures) -->
+        <!-- ============================= -->
+
+        <!-- Radiologist / Technician -->
+        <mxCell id="actor1" value="Radiologist /&#xa;Technician" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="180" width="60" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Doctor -->
+        <mxCell id="actor2" value="Doctor" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="440" width="60" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Head Nurse -->
+        <mxCell id="actor3" value="Head Nurse" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="680" width="60" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Nurse -->
+        <mxCell id="actor4" value="Nurse" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="920" width="60" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- Administrator -->
+        <mxCell id="actor5" value="Administrator" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#dae8fc;strokeColor=#6c8ebf;strokeWidth=2;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1560" y="440" width="60" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- ============================= -->
+        <!-- USE CASES (Ellipses) -->
+        <!-- ============================= -->
+
+        <!-- AUTHENTICATION -->
+        <mxCell id="uc1" value="Login /&#xa;Authenticate" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="450" y="140" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- RADIOLOGIST / TECHNICIAN USE CASES -->
+        <mxCell id="uc2" value="Register&#xa;Patient" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="650" y="140" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc3" value="Upload&#xa;Images" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="850" y="140" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc4" value="View Stored&#xa;Scans" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="140" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc5" value="Search for&#xa;Scans" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="260" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc6" value="Retrieve&#xa;Images" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="650" y="260" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc7" value="Update&#xa;Metadata" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="850" y="260" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc8" value="Receive Duplicate&#xa;Alerts" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="260" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc9" value="View Audit&#xa;Trail" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="260" width="140" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- DOCTOR USE CASES -->
+        <mxCell id="uc10" value="View Patient&#xa;Imaging History" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="400" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc10b" value="Search for&#xa;Scans" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="650" y="400" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc10c" value="Retrieve&#xa;Images" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="850" y="400" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- HEAD NURSE USE CASES -->
+        <mxCell id="uc11" value="Request Imaging&#xa;Procedures" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="560" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc12" value="Monitor Imaging&#xa;Status" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="650" y="560" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc13" value="View Ward-Level&#xa;Audit Info" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="850" y="560" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc13b" value="View / Retrieve&#xa;Ward Scan Records" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="560" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc13c" value="Register&#xa;Patient" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="560" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- NURSE USE CASES -->
+        <mxCell id="uc14" value="Confirm Patient&#xa;Identity" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="740" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc15" value="Report Record&#xa;Issues" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="650" y="740" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc15b" value="View / Retrieve&#xa;Routine Scan Records" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="850" y="740" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc15c" value="Register&#xa;Patient" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="740" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ADMINISTRATOR USE CASES -->
+        <mxCell id="uc16" value="Create / Manage&#xa;User Accounts" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="450" y="940" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc17" value="Assign Roles&#xa;&amp; Permissions" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="650" y="940" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc18" value="Monitor&#xa;Audit Log" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="850" y="940" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc19" value="Perform&#xa;Backups" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="940" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <mxCell id="uc20" value="View System&#xa;Reports" style="ellipse;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;strokeWidth=2;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="940" width="140" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ============================= -->
+        <!-- CONNECTIONS (Actor -> Use Case) -->
+        <!-- ============================= -->
+
+        <!-- Radiologist / Technician -->
+        <mxCell id="r1" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor1" target="uc1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r2" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor1" target="uc2"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r3" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor1" target="uc3"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r4" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor1" target="uc4"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r5" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor1" target="uc5"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r6" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor1" target="uc6"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r7" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor1" target="uc7"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r8" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor1" target="uc8"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="r9" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor1" target="uc9"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Doctor -->
+        <mxCell id="d1" style="endArrow=none;html=1;exitX=1;exitY=0.3;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor2" target="uc1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d2" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor2" target="uc10"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d3" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor2" target="uc10b"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d4" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor2" target="uc10c"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="d5" style="endArrow=none;html=1;exitX=1;exitY=0.7;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor2" target="uc9"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Head Nurse -->
+        <mxCell id="h1" style="endArrow=none;html=1;exitX=1;exitY=0.3;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor3" target="uc1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="h2" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor3" target="uc11"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="h3" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor3" target="uc12"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="h4" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor3" target="uc13"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="h5" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor3" target="uc13b"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="h6" style="endArrow=none;html=1;exitX=1;exitY=0.7;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor3" target="uc13c"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Nurse -->
+        <mxCell id="n1" style="endArrow=none;html=1;exitX=1;exitY=0.3;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor4" target="uc1"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="n2" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor4" target="uc14"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="n3" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor4" target="uc15"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="n4" style="endArrow=none;html=1;exitX=1;exitY=0.5;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor4" target="uc15b"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="n5" style="endArrow=none;html=1;exitX=1;exitY=0.7;entryX=0;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor4" target="uc15c"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- Administrator -->
+        <mxCell id="a1" style="endArrow=none;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor5" target="uc16"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="a2" style="endArrow=none;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor5" target="uc17"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="a3" style="endArrow=none;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor5" target="uc18"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="a4" style="endArrow=none;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor5" target="uc19"><mxGeometry relative="1" as="geometry" /></mxCell>
+        <mxCell id="a5" style="endArrow=none;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="actor5" target="uc20"><mxGeometry relative="1" as="geometry" /></mxCell>
+
+        <!-- LEGEND -->
+        <mxCell id="legend" value="LEGEND&#xa;─────────&#xa;Stick figure = Actor&#xa;Ellipse = Use Case&#xa;Solid line = Association&#xa;Dashed rectangle = System boundary" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;spacingLeft=10;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="680" width="260" height="130" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

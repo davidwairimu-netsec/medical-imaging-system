@@ -34,8 +34,16 @@ require APP_ROOT . '/views/layouts/main.php';
                 </div>
                 <p class="mt-2 mb-0 small text-muted">
                     <i class="bi bi-info-circle"></i>
-                    If this is genuinely a different patient, you may proceed. The attempt will be logged for audit.
+                    If this is genuinely a different patient, click <strong>Register Anyway</strong> below.
+                    The attempt will be logged for audit.
                 </p>
+                <div class="mt-3">
+                    <button type="submit" name="force_register" value="1"
+                            class="btn btn-warning btn-sm"
+                            onclick="return confirm('Are you sure this is a different patient? This will be logged in the audit trail.');">
+                        <i class="bi bi-exclamation-triangle"></i> Register Anyway
+                    </button>
+                </div>
             </div>
         <?php elseif (!empty($errors['duplicate'])): ?>
             <div class="alert alert-warning">

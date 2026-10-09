@@ -1,0 +1,374 @@
+<mxfile host="app.diagrams.net" modified="2026-10-09T00:00:00.000Z" agent="Mozilla/5.0" version="22.0.0" type="device">
+  <diagram name="Class Diagram" id="class-diagram-1">
+    <mxGraphModel dx="2000" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1800" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ================================================== -->
+        <!-- TITLE                                               -->
+        <!-- ================================================== -->
+        <mxCell id="title" value="Digital Medical Imaging Management System — Class Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="20" width="1200" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================== -->
+        <!-- SECTION: CORE CLASSES                               -->
+        <!-- ================================================== -->
+        <mxCell id="label-core" value="CORE CLASSES" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="80" width="300" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- Database -->
+        <mxCell id="cls-Database" value="&lt;&lt;class&gt;&gt;&#xa;Database" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="240" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Database-f" value="-instance: PDO (static)" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Database">
+          <mxGeometry y="40" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Database-m" value="+getInstance(): PDO&#xa;+connect(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Database">
+          <mxGeometry y="60" width="240" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- Auth -->
+        <mxCell id="cls-Auth" value="&lt;&lt;class&gt;&gt;&#xa;Auth" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="320" y="120" width="240" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Auth-f" value="-user: array (static)" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Auth">
+          <mxGeometry y="40" width="240" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Auth-m" value="+attempt(u,p): array&#xa;+check(): bool&#xa;+user(): array&#xa;+id(): int&#xa;+role(): string&#xa;+isRole(...): bool&#xa;+hasPermission(p): bool&#xa;+logout(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Auth">
+          <mxGeometry y="60" width="240" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- Session -->
+        <mxCell id="cls-Session" value="&lt;&lt;class&gt;&gt;&#xa;Session" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="600" y="120" width="220" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Session-m" value="+start(): void&#xa;+set(k,v): void&#xa;+get(k): mixed&#xa;+destroy(): void&#xa;+regenerate(): void&#xa;+flash(k,m): string" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Session">
+          <mxGeometry y="40" width="220" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- CSRF -->
+        <mxCell id="cls-CSRF" value="&lt;&lt;class&gt;&gt;&#xa;CSRF" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="860" y="120" width="220" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-CSRF-m" value="+generateToken(): string&#xa;+validateToken(t): bool&#xa;+field(): string&#xa;+verify(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-CSRF">
+          <mxGeometry y="40" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- StorageIntegrity -->
+        <mxCell id="cls-Storage" value="&lt;&lt;class&gt;&gt;&#xa;StorageIntegrity" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="120" width="240" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Storage-f" value="+STATUS_OK: const&#xa;+STATUS_MISSING: const&#xa;+STATUS_EMPTY: const" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Storage">
+          <mxGeometry y="40" width="240" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Storage-m" value="+checkImage(i): array&#xa;+verifyHash(i): array&#xa;+auditAll(): array&#xa;+findOrphanedFiles(): array&#xa;+getStats(): array" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Storage">
+          <mxGeometry y="90" width="240" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- BackupManager -->
+        <mxCell id="cls-BackupMgr" value="&lt;&lt;class&gt;&gt;&#xa;BackupManager" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1400" y="120" width="240" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-BackupMgr-m" value="+createFull(): array&#xa;+restore(id, db): array&#xa;+verify(id): array&#xa;-dumpDatabase(f): array&#xa;-zipDirectory(s,d): array" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-BackupMgr">
+          <mxGeometry y="40" width="240" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================== -->
+        <!-- SECTION: BASE MODEL                                 -->
+        <!-- ================================================== -->
+        <mxCell id="label-basemodel" value="ABSTRACT BASE CLASS" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="300" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- BaseModel -->
+        <mxCell id="cls-BaseModel" value="&lt;&lt;abstract&gt;&gt;&#xa;BaseModel" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=12;fontStyle=3;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="380" width="240" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-BaseModel-f" value="#table: string (static)&#xa;#primaryKey: string (static)" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-BaseModel">
+          <mxGeometry y="40" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-BaseModel-m" value="+db(): PDO (static)&#xa;+find(id): array&#xa;+all(): array&#xa;+create(data): int&#xa;+update(id,d): bool&#xa;+count(w): int" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-BaseModel">
+          <mxGeometry y="80" width="240" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================== -->
+        <!-- SECTION: MODELS                                     -->
+        <!-- ================================================== -->
+        <mxCell id="label-models" value="MODEL CLASSES (extend BaseModel)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="580" width="500" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- User Model -->
+        <mxCell id="cls-User" value="&lt;&lt;class&gt;&gt;&#xa;User" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="620" width="230" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-User-f" value="-table = &quot;users&quot;&#xa;-primaryKey = &quot;user_id&quot;" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-User">
+          <mxGeometry y="40" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-User-m" value="+findByUsername(u): array&#xa;+getAllWithRoles(): array&#xa;+createUser(d): int&#xa;+updateUser(id,d): bool&#xa;+getRoles(): array&#xa;+getStats(): array" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-User">
+          <mxGeometry y="70" width="230" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Patient Model -->
+        <mxCell id="cls-Patient" value="&lt;&lt;class&gt;&gt;&#xa;Patient" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="300" y="620" width="230" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Patient-f" value="-table = &quot;patients&quot;&#xa;-primaryKey = &quot;patient_id&quot;" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Patient">
+          <mxGeometry y="40" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Patient-m" value="+search(f): array&#xa;+getWithImages(id): array&#xa;+checkDuplicate(...): array&#xa;+getStats(): array" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Patient">
+          <mxGeometry y="70" width="230" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- MedicalImage Model -->
+        <mxCell id="cls-Image" value="&lt;&lt;class&gt;&gt;&#xa;MedicalImage" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="560" y="620" width="230" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Image-f" value="-table = &quot;medical_images&quot;&#xa;-primaryKey = &quot;image_id&quot;" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Image">
+          <mxGeometry y="40" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Image-m" value="+search(f): array&#xa;+findByHash(h): array&#xa;+getStats(): array&#xa;+getRecentUploads(l): array" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Image">
+          <mxGeometry y="70" width="230" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- AuditLog Model -->
+        <mxCell id="cls-AuditLog" value="&lt;&lt;class&gt;&gt;&#xa;AuditLog" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="820" y="620" width="230" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-AuditLog-f" value="-table = &quot;audit_logs&quot;&#xa;-primaryKey = &quot;log_id&quot;" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-AuditLog">
+          <mxGeometry y="40" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-AuditLog-m" value="+create(d): int&#xa;+getRecent(l,f): array&#xa;+getStats(): array&#xa;+verifyChain(): array" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-AuditLog">
+          <mxGeometry y="70" width="230" height="80" as="geometry" />
+        </mxCell>
+
+        <!-- Backup Model -->
+        <mxCell id="cls-Backup" value="&lt;&lt;class&gt;&gt;&#xa;Backup" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1080" y="620" width="230" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Backup-f" value="-table = &quot;backups&quot;&#xa;-primaryKey = &quot;backup_id&quot;" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Backup">
+          <mxGeometry y="40" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Backup-m" value="+getAllWithCreator(): array&#xa;+getFullBackups(l): array&#xa;+getTotalSize(): int" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Backup">
+          <mxGeometry y="70" width="230" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Nurse Model -->
+        <mxCell id="cls-Nurse" value="&lt;&lt;class&gt;&gt;&#xa;Nurse" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1340" y="620" width="230" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Nurse-f" value="-table = &quot;nurses&quot;&#xa;-primaryKey = &quot;nurse_id&quot;" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Nurse">
+          <mxGeometry y="40" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Nurse-m" value="+getAllWithDepartment(): array&#xa;+getWorkload(): array&#xa;+getStats(): array&#xa;+getDepartments(): array" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Nurse">
+          <mxGeometry y="70" width="230" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Medication Model -->
+        <mxCell id="cls-Medication" value="&lt;&lt;class&gt;&gt;&#xa;Medication" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1600" y="620" width="230" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Medication-f" value="-table = &quot;medications&quot;&#xa;-primaryKey = &quot;medication_id&quot;" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Medication">
+          <mxGeometry y="40" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-Medication-m" value="+getForPatient(p): array&#xa;+create(d): int" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-Medication">
+          <mxGeometry y="70" width="230" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================== -->
+        <!-- SECTION: CONTROLLERS                                -->
+        <!-- ================================================== -->
+        <mxCell id="label-controllers" value="CONTROLLER CLASSES" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=16;fontStyle=1;fontColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="40" y="880" width="400" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- AuthController -->
+        <mxCell id="cls-AuthC" value="&lt;&lt;class&gt;&gt;&#xa;AuthController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="920" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-AuthC-m" value="+login(): void&#xa;+logout(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-AuthC">
+          <mxGeometry y="40" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- PatientController -->
+        <mxCell id="cls-PatientC" value="&lt;&lt;class&gt;&gt;&#xa;PatientController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="280" y="920" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-PatientC-m" value="+index(): void&#xa;+create(): void&#xa;+view(): void&#xa;+edit(): void&#xa;+history(): void&#xa;+archive(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-PatientC">
+          <mxGeometry y="40" width="200" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- ImagingController -->
+        <mxCell id="cls-ImgC" value="&lt;&lt;class&gt;&gt;&#xa;ImagingController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="520" y="920" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-ImgC-m" value="+index(): void&#xa;+upload(): void&#xa;+view(): void&#xa;+serve(): void&#xa;+download(): void&#xa;+archive(): void&#xa;+delete(): void&#xa;+requestDelete(): void&#xa;+deletionRequests(): void&#xa;+reviewDeletion(): void&#xa;+recentlyDeleted(): void&#xa;+archived(): void&#xa;+restore(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="cls-ImgC">
+          <mxGeometry y="40" width="200" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- UserController -->
+        <mxCell id="cls-UserC" value="&lt;&lt;class&gt;&gt;&#xa;UserController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="760" y="920" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-UserC-m" value="+index(): void&#xa;+create(): void&#xa;+edit(): void&#xa;+toggleStatus(): void&#xa;+resetPassword(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-UserC">
+          <mxGeometry y="40" width="200" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- AuditController -->
+        <mxCell id="cls-AuditC" value="&lt;&lt;class&gt;&gt;&#xa;AuditController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="920" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-AuditC-m" value="+index(): void&#xa;+integrity(): void&#xa;+fixIntegrity(): void&#xa;+verifyChainView(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-AuditC">
+          <mxGeometry y="40" width="200" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- BackupController -->
+        <mxCell id="cls-BackupC" value="&lt;&lt;class&gt;&gt;&#xa;BackupController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1240" y="920" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-BackupC-m" value="+index(): void&#xa;+create(): void&#xa;+download(): void&#xa;+verify(): void&#xa;+restore(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-BackupC">
+          <mxGeometry y="40" width="200" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- HeadNurseController -->
+        <mxCell id="cls-HNC" value="&lt;&lt;class&gt;&gt;&#xa;HeadNurseController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="920" width="220" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-HNC-m" value="+index(): void&#xa;+nurses(): void&#xa;+createNurse(): void&#xa;+editNurse(): void&#xa;+createNurseLogin(): void&#xa;+resetNursePassword(): void&#xa;+assignments(): void&#xa;+assignNursePatient(): void&#xa;+assignNurseDoctor(): void&#xa;+workload(): void&#xa;+shifts(): void&#xa;+createShift(): void&#xa;+reports(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=10;" vertex="1" parent="cls-HNC">
+          <mxGeometry y="40" width="220" height="160" as="geometry" />
+        </mxCell>
+
+        <!-- NurseController -->
+        <mxCell id="cls-NurseC" value="&lt;&lt;class&gt;&gt;&#xa;NurseController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="1740" y="920" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-NurseC-m" value="+index(): void&#xa;+patient(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-NurseC">
+          <mxGeometry y="40" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ProfileController -->
+        <mxCell id="cls-ProfileC" value="&lt;&lt;class&gt;&gt;&#xa;ProfileController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1120" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-ProfileC-m" value="+changePassword(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-ProfileC">
+          <mxGeometry y="40" width="200" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- ForgotPasswordController -->
+        <mxCell id="cls-ForgotC" value="&lt;&lt;class&gt;&gt;&#xa;ForgotPasswordController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="280" y="1120" width="220" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-ForgotC-m" value="+forgot(): void&#xa;+reset(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-ForgotC">
+          <mxGeometry y="40" width="220" height="50" as="geometry" />
+        </mxCell>
+
+        <!-- DashboardController -->
+        <mxCell id="cls-DashC" value="&lt;&lt;class&gt;&gt;&#xa;DashboardController" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=40;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="1">
+          <mxGeometry x="540" y="1120" width="200" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="cls-DashC-m" value="+index(): void" style="text;html=1;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;fontSize=11;" vertex="1" parent="cls-DashC">
+          <mxGeometry y="40" width="200" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================== -->
+        <!-- RELATIONSHIPS: INHERITANCE (extends)                -->
+        <!-- ================================================== -->
+        <!-- BaseModel <|-- User -->
+        <mxCell id="ext-User" style="endArrow=block;endFill=0;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="cls-User" target="cls-BaseModel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- BaseModel <|-- Patient -->
+        <mxCell id="ext-Patient" style="endArrow=block;endFill=0;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="cls-Patient" target="cls-BaseModel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- BaseModel <|-- MedicalImage -->
+        <mxCell id="ext-Image" style="endArrow=block;endFill=0;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="cls-Image" target="cls-BaseModel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- BaseModel <|-- AuditLog -->
+        <mxCell id="ext-AuditLog" style="endArrow=block;endFill=0;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="cls-AuditLog" target="cls-BaseModel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- BaseModel <|-- Backup -->
+        <mxCell id="ext-Backup" style="endArrow=block;endFill=0;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="cls-Backup" target="cls-BaseModel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- BaseModel <|-- Nurse -->
+        <mxCell id="ext-Nurse" style="endArrow=block;endFill=0;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="cls-Nurse" target="cls-BaseModel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- BaseModel <|-- Medication -->
+        <mxCell id="ext-Med" style="endArrow=block;endFill=0;html=1;strokeColor=#d79b00;strokeWidth=1.5;" edge="1" parent="1" source="cls-Medication" target="cls-BaseModel">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================== -->
+        <!-- RELATIONSHIPS: ASSOCIATIONS (uses)                  -->
+        <!-- ================================================== -->
+        <!-- Database <.. Models -->
+        <mxCell id="dep-DB-User" style="endArrow=open;dashed=1;html=1;strokeColor=#6c8ebf;strokeWidth=1;" edge="1" parent="1" source="cls-BaseModel" target="cls-Database">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Auth -> Database -->
+        <mxCell id="assoc-Auth-DB" style="endArrow=open;html=1;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="cls-Auth" target="cls-Database">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Auth -> AuditLog -->
+        <mxCell id="assoc-Auth-Audit" style="endArrow=open;html=1;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="cls-Auth" target="cls-AuditLog">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- Auth -> Session -->
+        <mxCell id="assoc-Auth-Sess" style="endArrow=open;html=1;strokeColor=#6c8ebf;strokeWidth=1.5;" edge="1" parent="1" source="cls-Auth" target="cls-Session">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- StorageIntegrity -> MedicalImage -->
+        <mxCell id="assoc-Storage-Img" style="endArrow=open;html=1;strokeColor=#82b366;strokeWidth=1.5;" edge="1" parent="1" source="cls-Storage" target="cls-Image">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <!-- BackupManager -> Backup -->
+        <mxCell id="assoc-BackupMgr-Backup" style="endArrow=open;html=1;strokeColor=#82b366;strokeWidth=1.5;" edge="1" parent="1" source="cls-BackupMgr" target="cls-Backup">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================== -->
+        <!-- CONTROLLER -> MODEL relationships                    -->
+        <!-- ================================================== -->
+        <mxCell id="ctrl-ImgC-Image" style="endArrow=open;html=1;strokeColor=#9673a6;strokeWidth=1.5;" edge="1" parent="1" source="cls-ImgC" target="cls-Image">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl-PatientC-Patient" style="endArrow=open;html=1;strokeColor=#9673a6;strokeWidth=1.5;" edge="1" parent="1" source="cls-PatientC" target="cls-Patient">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl-UserC-User" style="endArrow=open;html=1;strokeColor=#9673a6;strokeWidth=1.5;" edge="1" parent="1" source="cls-UserC" target="cls-User">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl-AuditC-AuditLog" style="endArrow=open;html=1;strokeColor=#9673a6;strokeWidth=1.5;" edge="1" parent="1" source="cls-AuditC" target="cls-AuditLog">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl-BackupC-BackupMgr" style="endArrow=open;html=1;strokeColor=#9673a6;strokeWidth=1.5;" edge="1" parent="1" source="cls-BackupC" target="cls-BackupMgr">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl-HNC-Nurse" style="endArrow=open;html=1;strokeColor=#9673a6;strokeWidth=1.5;" edge="1" parent="1" source="cls-HNC" target="cls-Nurse">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl-NurseC-Patient" style="endArrow=open;html=1;strokeColor=#9673a6;strokeWidth=1.5;" edge="1" parent="1" source="cls-NurseC" target="cls-Patient">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ctrl-NurseC-Med" style="endArrow=open;html=1;strokeColor=#9673a6;strokeWidth=1.5;" edge="1" parent="1" source="cls-NurseC" target="cls-Medication">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ================================================== -->
+        <!-- LEGEND                                              -->
+        <!-- ================================================== -->
+        <mxCell id="legend" value="LEGEND&#xa;───────────────────&#xa;Blue box = Core service class&#xa;Green box = Utility class&#xa;Orange box = Abstract base class&#xa;Yellow box = Model class (extends BaseModel)&#xa;Purple box = Controller class&#xa;&#xa;Solid arrow (filled) = Inheritance (extends)&#xa;Open arrow = Association (uses)&#xa;Dashed arrow = Dependency&#xa;&#xa;Prefixes:&#xa;  + = public&#xa;  - = private&#xa;  # = protected" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;spacingLeft=10;spacingTop=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1280" width="400" height="230" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -81,9 +81,29 @@ class PatientController
                             $hasExact = true;
                         }
                     }
-                    $errors['duplicate'] = implode('; ', $messages);
-                    $errors['duplicate_severity'] = $hasExact ? 'exact' : 'possible';
-                    $errors['duplicate_records'] = $duplicates;
+
+                    // If user clicked "Register Anyway", log the duplicate warning
+                    // but allow the insert to proceed
+                    $forceRegister = !empty($_POST['force_register']);
+
+                    if ($forceRegister) {
+                        // Log that we're bypassing the warning
+                        AuditLog::create([
+                            'user_id' => Auth::id(),
+                            'action' => 'PATIENT_DUPLICATE_BYPASSED',
+                            'entity_type' => 'patient',
+                            'entity_id' => null,
+                            'description' => 'User bypassed duplicate warning for ' .
+                                             $data['first_name'] . ' ' . $data['last_name'] .
+                                             ' (' . $data['hospital_number'] . '). ' .
+                                             'Reasons: ' . implode('; ', $messages),
+                        ]);
+                        // Do not add to errors — allow the insert to proceed
+                    } else {
+                        $errors['duplicate'] = implode('; ', $messages);
+                        $errors['duplicate_severity'] = $hasExact ? 'exact' : 'possible';
+                        $errors['duplicate_records'] = $duplicates;
+                    }
                 }
             }
 
