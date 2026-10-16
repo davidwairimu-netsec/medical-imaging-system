@@ -101,3 +101,32 @@ Git commit history showing:
 ---
 
 DCF-01-0247/2025 — Wairimu David Kariuki
+
+---
+
+## Complete Demo Screenshots (Added)
+
+The full 6-step forensic demonstration was captured across 6 screenshots:
+
+| # | Filename | Description |
+|---|----------|-------------|
+| 12 | Screenshot_09a_Complete_Demo.png | Step 1 & 2: Baseline check + tampering simulation |
+| 13 | Screenshot_09b_Complete_Demo.png | Step 3: Tampering detected |
+| 14 | Screenshot_09c_Complete_Demo.png | Step 4: Audit trail investigation |
+| 15 | Screenshot_09d_Complete_Demo.png | Step 5: File restoration |
+| 16 | Screenshot_09e_Complete_Demo.png | Step 6: Verification of restoration |
+| 17 | Screenshot_09f_Complete_Demo.png | Complete demo output overview |
+
+### Combined with earlier screenshots, the complete evidence set is:
+
+- **Screenshot_01**: Dashboard
+- **Screenshot_02a-c**: Forensic script source (3 parts)
+- **Screenshot_03**: Baseline OK
+- **Screenshot_04**: Tampering simulation
+- **Screenshot_05**: Tampering detected
+- **Screenshot_06a-b**: Audit trail
+- **Screenshot_07**: Restoration verified
+- **Screenshot_08**: Git history
+- **Screenshot_09a-f**: Complete demo run (6 parts)
+
+**Total: 17 evidence files**
