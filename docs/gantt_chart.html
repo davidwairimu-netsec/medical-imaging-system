@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Schedule — Gantt Chart</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #e8ecf1;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            padding: 15mm 12mm;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 8mm;
+            border-bottom: 3px solid #1a2332;
+            padding-bottom: 4mm;
+        }
+
+        .header h1 {
+            font-size: 16pt;
+            color: #1a2332;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 2mm;
+        }
+
+        .header h2 {
+            font-size: 10pt;
+            color: #4a5568;
+            font-weight: 400;
+        }
+
+        .header .project-title {
+            font-size: 8pt;
+            color: #718096;
+            margin-top: 2mm;
+            font-style: italic;
+        }
+
+        .gantt-container {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        table.gantt {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            font-size: 7pt;
+        }
+
+        table.gantt th {
+            background: #1a2332;
+            color: white;
+            font-weight: 600;
+            font-size: 6.5pt;
+            padding: 3mm 1mm;
+            text-align: center;
+            border: 1px solid #2d3748;
+            vertical-align: middle;
+            line-height: 1.2;
+        }
+
+        table.gantt th.activity-col {
+            width: 62mm;
+            text-align: left;
+            padding-left: 3mm;
+            font-size: 7pt;
+        }
+
+        table.gantt th.week-col {
+            width: auto;
+        }
+
+        table.gantt td {
+            padding: 0;
+            border: 1px solid #e2e8f0;
+            height: 12mm;
+            vertical-align: middle;
+        }
+
+        table.gantt td.activity-cell {
+            background: #f7fafc;
+            padding: 2mm 2mm 2mm 3mm;
+            font-size: 7pt;
+            color: #2d3748;
+            font-weight: 500;
+            line-height: 1.3;
+            text-align: left;
+            border-right: 2px solid #1a2332;
+        }
+
+        table.gantt td.activity-cell .num {
+            display: inline-block;
+            width: 4.5mm;
+            height: 4.5mm;
+            background: #3182ce;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 4.5mm;
+            font-size: 6pt;
+            font-weight: 700;
+            margin-right: 1.5mm;
+            vertical-align: middle;
+        }
+
+        table.gantt td.bar-cell {
+            position: relative;
+            background: #fafbfc;
+        }
+
+        .bar {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 6mm;
+            border-radius: 3mm;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .bar-planning   { background: linear-gradient(90deg, #4299e1, #3182ce); }
+        .bar-setup      { background: linear-gradient(90deg, #48bb78, #38a169); }
+        .bar-development{ background: linear-gradient(90deg, #ed8936, #dd6b20); }
+        .bar-analysis   { background: linear-gradient(90deg, #9f7aea, #805ad5); }
+        .bar-mitigation { background: linear-gradient(90deg, #f56565, #e53e3e); }
+        .bar-finals     { background: linear-gradient(90deg, #38b2ac, #319795); }
+        .bar-present    { background: linear-gradient(90deg, #ed64a6, #d53f8c); }
+        .bar-deploy     { background: linear-gradient(90deg, #ecc94b, #d69e2e); }
+        .bar-docs       { background: linear-gradient(90deg, #a0aec0, #718096); }
+        .bar-prelim     { background: linear-gradient(90deg, #4fd1c5, #38b2ac); }
+        .bar-final      { background: linear-gradient(90deg, #d53f8c, #b83280); }
+
+        .bar-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 5.5pt;
+            font-weight: 600;
+            white-space: nowrap;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+        }
+
+        .footer {
+            margin-top: 6mm;
+            padding-top: 3mm;
+            border-top: 2px solid #1a2332;
+            display: flex;
+            justify-content: space-between;
+            font-size: 7pt;
+            color: #4a5568;
+        }
+
+        .legend {
+            display: flex;
+            gap: 4mm;
+            flex-wrap: wrap;
+            margin-bottom: 6mm;
+            padding: 3mm;
+            background: #f7fafc;
+            border-radius: 2mm;
+            border: 1px solid #e2e8f0;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 1.5mm;
+            font-size: 6.5pt;
+            color: #4a5568;
+        }
+
+        .legend-dot {
+            width: 3.5mm;
+            height: 3.5mm;
+            border-radius: 50%;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .a4-page { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="a4-page">
+
+        <div class="header">
+            <h1>PROJECT SCHEDULE BREAKDOWN</h1>
+            <h2>Gantt Chart — Development Timeline</h2>
+            <div class="project-title">
+                Design and Implementation of a Digital Medical Imaging Management System
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item"><div class="legend-dot" style="background:#3182ce"></div> Planning</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#38a169"></div> Setup</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#dd6b20"></div> Development</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#805ad5"></div> Analysis</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#e53e3e"></div> Mitigation</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#319795"></div> Finals</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#d53f8c"></div> Presentation</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#d69e2e"></div> Deployment</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#718096"></div> Documentation</div>
+        </div>
+
+        <div class="gantt-container">
+            <table class="gantt">
+                <thead>
+                    <tr>
+                        <th class="activity-col">#&nbsp;&nbsp;ACTIVITY / MILESTONE</th>
+                        <th class="week-col">Aug<br>4–12</th>
+                        <th class="week-col">Aug<br>12–19</th>
+                        <th class="week-col">Aug<br>19–26</th>
+                        <th class="week-col">Aug 26<br>– Sep 2</th>
+                        <th class="week-col">Sep<br>2–9</th>
+                        <th class="week-col">Sep<br>9–16</th>
+                        <th class="week-col">Sep<br>16–23</th>
+                        <th class="week-col">Sep 30<br>– Oct 7</th>
+                        <th class="week-col">Oct<br>7–14</th>
+                        <th class="week-col">Oct<br>14–21</th>
+                        <th class="week-col">Oct<br>21–28</th>
+                        <th class="week-col">Nov<br>20–23</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 1 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">1</span>Project planning &amp; Legal/Ethical Frameworks &amp; Documentation — Chapter One
+                        </td>
+                        <td class="bar-cell" colspan="2">
+                            <div class="bar bar-planning" style="left:4%; width:92%;">
+                                <span class="bar-label">PLANNING</span>
+                            </div>
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                    </tr>
+
+                    <!-- 2 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">2</span>Environment Setup &amp; Scenario Design &amp; Documentation — Chapter Two
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="2">
+                            <div class="bar bar-setup" style="left:4%; width:92%;">
+                                <span class="bar-label">SETUP</span>
+                            </div>
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                    </tr>
+
+                    <!-- 3 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">3</span>Project Development &amp; Documentation — Chapter Three
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="3">
+                            <div class="bar bar-development" style="left:4%; width:92%;">
+                                <span class="bar-label">DEVELOPMENT</span>
+                            </div>
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                    </tr>
+
+                    <!-- 4 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">4</span>Analysis &amp; Findings &amp; Documentation — Chapter Three
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="3">
+                            <div class="bar bar-analysis" style="left:4%; width:92%;">
+                                <span class="bar-label">ANALYSIS</span>
+                            </div>
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                    </tr>
+
+                    <!-- 5 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">5</span>Mitigation, Hardening &amp; Recommendations &amp; Documentation — Chapter Three
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="3">
+                            <div class="bar bar-mitigation" style="left:4%; width:92%;">
+                                <span class="bar-label">MITIGATION &amp; HARDENING</span>
+                            </div>
+                        </td>
+                        <td class="bar-cell"></td>
+                    </tr>
+
+                    <!-- 6 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">6</span>Final Touches of System, Documentation Chapter Four, Preliminary Pages &amp; References
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="1">
+                            <div class="bar bar-finals" style="left:4%; width:92%;">
+                                <span class="bar-label">FINALS</span>
+                            </div>
+                        </td>
+                        <td class="bar-cell"></td>
+                    </tr>
+
+                    <!-- 7 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">7</span>Project Presentation
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="1">
+                            <div class="bar bar-present" style="left:4%; width:92%;">
+                                <span class="bar-label">PRESENT</span>
+                            </div>
+                        </td>
+                        <td class="bar-cell"></td>
+                    </tr>
+
+                    <!-- 8 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">8</span>System Deployment &amp; Documentation — Chapter Three
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="1">
+                            <div class="bar bar-deploy" style="left:4%; width:92%;">
+                                <span class="bar-label">DEPLOY</span>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- 9 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">9</span>Documentation — Chapter Four &amp; References
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="1">
+                            <div class="bar bar-docs" style="left:4%; width:92%;">
+                                <span class="bar-label">DOCS</span>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- 10 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">10</span>Documentation — Preliminary Pages
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="1">
+                            <div class="bar bar-prelim" style="left:4%; width:92%;">
+                                <span class="bar-label">PRELIM</span>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- 11 -->
+                    <tr>
+                        <td class="activity-cell">
+                            <span class="num">11</span>Final Project Presentation
+                        </td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell"></td>
+                        <td class="bar-cell" colspan="1">
+                            <div class="bar bar-final" style="left:4%; width:92%;">
+                                <span class="bar-label">FINAL</span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="footer">
+            <span><strong>Project:</strong> Digital Medical Imaging Management System</span>
+            <span><strong>Timeline:</strong> August 2026 – November 2026</span>
+        </div>
+
+    </div>
+</body>
+</html>
