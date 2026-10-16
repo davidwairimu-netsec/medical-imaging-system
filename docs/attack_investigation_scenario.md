@@ -100,6 +100,43 @@ Formal forensic report with evidence, analysis, conclusion, recommendation.
 
 ---
 
+## 2.6 Forensic Readiness Features (Actual Implementation)
+
+The system implements forensic readiness through a centralized audit trail in the `audit_logs` table.
+
+| Feature | Implementation | Evidence |
+|---------|----------------|----------|
+| User authentication tracking | logActivity() | `audit_logs.action = 'USER_LOGIN'` |
+| Image upload tracking | logActivity() | `audit_logs.action = 'IMAGE_UPLOAD'` |
+| Image view tracking | logActivity() | `audit_logs.action = 'IMAGE_VIEW'` |
+| Duplicate detection | logActivity() | `audit_logs.action = 'IMAGE_DUPLICATE_ATTEMPT'` |
+| File integrity verification | SHA-256 recompute | `scripts/forensic_check.php` |
+| User attribution | user_id column | `audit_logs.user_id` |
+| Timestamp precision | created_at | `audit_logs.created_at` |
+| Chain of custody | Chronological log sequence | `audit_logs` |
+
+### Audit Log Actions Captured
+
+| Action | Trigger |
+|--------|---------|
+| `USER_LOGIN` | Successful login |
+| `USER_LOGOUT` | Logout |
+| `IMAGE_UPLOAD` | Successful upload |
+| `IMAGE_VIEW` | Image viewed |
+| `IMAGE_DUPLICATE_ATTEMPT` | Duplicate blocked |
+| `IMAGE_DELETE` | Image deleted |
+| `USER_CREATE` | New user (admin) |
+| `USER_UPDATE` | User updated (admin) |
+
+### Evidence Query
+
+To investigate a tampering incident:
+
+```sql
+SELECT log_id, user_id, action, entity_type, entity_id, created_at 
+FROM audit_logs 
+WHERE entity_id = <image_id>
+ORDER BY created_at;
 ## 2.6 Forensic Readiness Features
 
 | Feature | Implementation | Table |
