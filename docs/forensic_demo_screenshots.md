@@ -130,3 +130,11 @@ The full 6-step forensic demonstration was captured across 6 screenshots:
 - **Screenshot_09a-f**: Complete demo run (6 parts)
 
 **Total: 17 evidence files**
+
+---
+
+## Additional Screenshot
+
+| # | Filename | Description |
+|---|----------|-------------|
+| 18 | Screenshot_10_Audit_Chain_INTACT.png | Audit Chain verification — 83/83 INTACT |
