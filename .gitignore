@@ -43,3 +43,4 @@ fix_*.php
 generate_*.php
 direct_login_test.php
 *.bak2
+config/database.php
