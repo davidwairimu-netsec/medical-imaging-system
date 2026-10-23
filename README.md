@@ -34,8 +34,7 @@ Department of ICT and Engineering
 | Item | Value |
 |------|-------|
 | Status | ✅ Working — All features tested |
-| Installation Path | `/opt/lampp/htdocs/System 2/` |
-| Access URL | `http://localhost/System%202/login.php` |
+| Access URL | `[https://digitalmedical.byethost4.com/]` |
 | Database | `medical_imaging_db` (MySQL/MariaDB) |
 | PHP Version | 8.0+ |
 
