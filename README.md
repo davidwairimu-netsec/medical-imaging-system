@@ -9,152 +9,45 @@ You can view the live deployment of the system here:
 
 > **Note:** This is a live deployment. Authorised access only. All activity is monitored and logged.
 
-## 🔐 Core Security & Forensic Features
+## 🛡️ Cybersecurity & Forensic Features
 
-This system was built with security and digital forensics at its core, addressing the problem of missing, duplicated, and tampered medical records.
+This system was built with security and digital forensics at its core, specifically addressing the problem of missing, duplicated, and tampered medical records.
 
-*   **Cryptographic Duplicate Detection:** Uses SHA-256 content hashing to prevent identical images from being uploaded twice, regardless of filename changes.
-*   **Tamper-Evident Audit Logs:** Every action (logins, uploads, views, deletions) is recorded in a hash-chained audit trail. Any modification to historical logs breaks the cryptographic chain and is instantly detectable.
-*   **Forensic Integrity Checker:** A dedicated script (`scripts/forensic_check.php`) that compares stored database hashes against physical files on the disk to detect unauthorized tampering.
-*   **Role-Based Access Control (RBAC):** Distinct interfaces and permissions for Administrators, Radiologists, Doctors, Head Nurses, and Nurses.
-*   **Secure Uploads:** Validates MIME types, file extensions, and uses `getimagesize()` to prevent malicious file uploads.
-*   **Storage Integrity Audit:** An admin dashboard that cross-references the database with the file system to identify missing, orphaned, or empty files.
+*   **Cryptographic Duplicate Detection (SHA-256):** Prevents identical images from being uploaded twice by comparing the SHA-256 hash of the file content, not just the filename. This blocks users from overwriting medical errors with renamed files.
+*   **Tamper-Evident Hash-Chained Audit Logs:** Every action (logins, uploads, views, deletions) is recorded in an `audit_logs` table. Each log entry's SHA-256 hash includes the hash of the previous entry, creating a cryptographic chain. If any historical log is altered, the chain breaks and is instantly detectable.
+*   **Forensic Integrity Checker:** A dedicated forensic script (`scripts/forensic_check.php`) that cross-references database records with physical files on disk. It recomputes hashes to detect unauthorized tampering, missing files, or zero-byte files.
+*   **Chain of Custody Enforcement:** The system logs the user ID, IP address, timestamp, and user agent for every state-changing action. This provides a complete timeline for forensic investigations.
+*   **Role-Based Access Control (RBAC):** Enforces strict access control across 6 roles (Admin, Radiologist, Doctor, Head Nurse, Nurse, Lab Technician). Unauthorized URL access is blocked server-side with 403 errors and logged.
+*   **Secure File Uploads:** Validates MIME types via `finfo`, checks extensions against a whitelist, and uses `getimagesize()` to prevent malicious scripts disguised as images.
+*   **Session Hardening:** Implements `HttpOnly` and `SameSite=Strict` cookies, session ID regeneration on login, and CSRF tokens for all POST requests.
 
 ## 🛠️ Technology Stack
 
 *   **Backend:** PHP 8.2 (MVC-inspired architecture)
 *   **Database:** MySQL / MariaDB
 *   **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
-*   **Security:** PDO Prepared Statements, Bcrypt Password Hashing, CSRF Tokens, SHA-256 Hashing
+*   **Security:** PDO Prepared Statements, Bcrypt, CSRF Tokens, SHA-256 Hashing
 *   **Environment:** XAMPP (Local Development), ByetHost (Live Deployment)
 
-## 📂 Project Structure
+## 🧪 Forensic Verification & Integrity Auditing
 
-```text
-├── config/          # Database and application configuration
-├── controllers/     # Request handling and logic orchestration
-├── core/            # Core classes (Auth, CSRF, Database, StorageIntegrity, AuditLog)
-├── models/          # Data access layer
-├── views/           # UI templates (role-specific dashboards)
-├── scripts/         # Forensic check and maintenance scripts
-├── database/        # SQL schema and seed scripts
-├── docs/            # Project documentation, DFDs, and screenshots
-└── public/          # Static assets (CSS, JS, uploads)
-⚙️ Local Setup Instructions
-To run this project locally on your machine:
-
-<<<<<<< HEAD
-| Item | Value |
-|------|-------|
-| Status | ✅ Working — All features tested |
-| Access URL | `[https://digitalmedical.byethost4.com/]` |
-| Database | `medical_imaging_db` (MySQL/MariaDB) |
-| PHP Version | 8.0+ |
-=======
-Clone the repository:
->>>>>>> dc1e5a2 (docs: add author profile and update title to Security Engineer Practitioner)
-
-bash
-git clone <your-repo-url>
-cd "System 2"
-Start XAMPP:
-Ensure Apache and MySQL are running.
-
-Database Setup:
-
-Create a database named medical_imaging_db in phpMyAdmin.
-
-Import the schema from database/database.sql.
-
-Configure Environment:
-
-Ensure config/database.php is set to use localhost and the root user.
-
-(Note: The config file automatically detects CLI vs Browser environments).
-
-Access the System:
-Navigate to http://localhost/System%202/ in your browser.
-
-🧪 Forensic Verification
-To test the forensic integrity of the system locally, run the standalone detection script:
-
-bash
-php scripts/forensic_check.php
-This will output the status of every image (OK, MISSING, or TAMPERED).
-
-📸 Documentation
-The docs/ folder contains comprehensive documentation, including:
-
-System Flowcharts
-
-Data Flow Diagrams (Level 0 & 1)
-
-Use Case & Class Diagrams
-
-Attack/Investigation Scenario & Threat Model
-
-Legal & Ethical Considerations
-
-Step-by-step Forensic Demo Guide
-
-👤 Author
-Wairimu David Kariuki
-Security Engineer Practitioner
-
-📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-Built to demonstrate secure coding practices, cryptographic integrity, and digital forensic readiness.
-
-### How to update your repository:
-
-Run the following commands in your terminal to update your local `README.md` and push it to GitHub:
+To demonstrate the forensic readiness of the system, you can run the standalone integrity check:
 
 ```bash
-cd "/opt/lampp/htdocs/System 2"
+php scripts/forensic_check.php
+This script outputs the integrity status of every stored image ([OK], [MISSING], or [TAMPERED]).
 
-# Overwrite the README with the updated content
-cat > README.md << 'EOF'
-# 🏥 MediImaging DMS - Digital Medical Imaging Management System
+Additionally, the Audit Chain Verification page (accessible in the Admin dashboard) iterates through the entire audit_logs table, recomputes the hash chain, and validates that 100% of the entries are cryptographically linked. In the case of legacy data, a backfill script is provided to repair broken chains without losing the historical audit trail.
 
-A secure, forensically-ready web application designed to manage patient scan records, prevent data duplication, and ensure cryptographic data integrity in regional hospitals.
-
-## 🚀 Live Demo
-
-You can view the live deployment of the system here:
-**[https://digitalmedical.byethost4.com/](https://digitalmedical.byethost4.com/)**
-
-> **Note:** This is a live deployment. Authorised access only. All activity is monitored and logged.
-
-## 🔐 Core Security & Forensic Features
-
-This system was built with security and digital forensics at its core, addressing the problem of missing, duplicated, and tampered medical records.
-
-*   **Cryptographic Duplicate Detection:** Uses SHA-256 content hashing to prevent identical images from being uploaded twice, regardless of filename changes.
-*   **Tamper-Evident Audit Logs:** Every action (logins, uploads, views, deletions) is recorded in a hash-chained audit trail. Any modification to historical logs breaks the cryptographic chain and is instantly detectable.
-*   **Forensic Integrity Checker:** A dedicated script (`scripts/forensic_check.php`) that compares stored database hashes against physical files on the disk to detect unauthorized tampering.
-*   **Role-Based Access Control (RBAC):** Distinct interfaces and permissions for Administrators, Radiologists, Doctors, Head Nurses, and Nurses.
-*   **Secure Uploads:** Validates MIME types, file extensions, and uses `getimagesize()` to prevent malicious file uploads.
-*   **Storage Integrity Audit:** An admin dashboard that cross-references the database with the file system to identify missing, orphaned, or empty files.
-
-## 🛠️ Technology Stack
-
-*   **Backend:** PHP 8.2 (MVC-inspired architecture)
-*   **Database:** MySQL / MariaDB
-*   **Frontend:** HTML5, CSS3, JavaScript, Bootstrap 5
-*   **Security:** PDO Prepared Statements, Bcrypt Password Hashing, CSRF Tokens, SHA-256 Hashing
-*   **Environment:** XAMPP (Local Development), ByetHost (Live Deployment)
-
-## 📂 Project Structure
-
-```text
-├── config/          # Database and application configuration
+📂 Project Structure
+text
+├── config/          # Environment and database configuration
 ├── controllers/     # Request handling and logic orchestration
 ├── core/            # Core classes (Auth, CSRF, Database, StorageIntegrity, AuditLog)
 ├── models/          # Data access layer
 ├── views/           # UI templates (role-specific dashboards)
 ├── scripts/         # Forensic check and maintenance scripts
-├── database/        # SQL schema and seed scripts
+├── database/        # SQL schema, seed, and backfill scripts
 ├── docs/            # Project documentation, DFDs, and screenshots
 └── public/          # Static assets (CSS, JS, uploads)
 ⚙️ Local Setup Instructions
@@ -183,13 +76,6 @@ Ensure config/database.php is set to use localhost and the root user.
 Access the System:
 Navigate to http://localhost/System%202/ in your browser.
 
-🧪 Forensic Verification
-To test the forensic integrity of the system locally, run the standalone detection script:
-
-bash
-php scripts/forensic_check.php
-This will output the status of every image (OK, MISSING, or TAMPERED).
-
 📸 Documentation
 The docs/ folder contains comprehensive documentation, including:
 
@@ -213,31 +99,3 @@ Security Engineer Practitioner
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 Built to demonstrate secure coding practices, cryptographic integrity, and digital forensic readiness.
-EOF
-
-<<<<<<< HEAD
-Automated backups
-
-Two-factor authentication
-
-Encryption at rest + in transit
-
-EHR integration
-
-AI-assisted classification
-
-Security & Ethics Warning
-This is an academic healthcare prototype. NOT for production clinical use.
-
-Use fictional patient data only.
-
-License
-Academic project — evaluation and demonstration only. Not licensed for production use.
-
-End of README
-=======
-Stage, commit, and push the changes
-git add README.md
-git commit -m "docs: add author profile and update title to Security Engineer Practitioner"
-git push origin main
->>>>>>> dc1e5a2 (docs: add author profile and update title to Security Engineer Practitioner)
