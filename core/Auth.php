@@ -39,6 +39,17 @@ class Auth
         if ((int) $row['cnt'] >= $maxAttempts) {
             self::recordAttempt($username, $ip, false);
             self::logFailedAttempt($username, 'rate_limited');
+
+            // Explicit forensic audit log for blocked attempts
+            AuditLog::create([
+                'user_id' => null,
+                'action' => 'USER_LOGIN_BLOCKED',
+                'entity_type' => 'user',
+                'entity_id' => null,
+                'description' => "Login blocked (rate limit): {$username}",
+                'ip_address' => $ip,
+            ]);
+
             return ['status' => 'rate_limited', 'user' => null];
         }
 
