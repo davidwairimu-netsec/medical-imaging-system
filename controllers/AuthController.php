@@ -4,41 +4,55 @@
  */
 class AuthController
 {
-    public function login(): void
+            public function login(): void
     {
-        // Redirect if already logged in
+        // Already logged in → redirect
         if (Auth::check()) {
-            header('Location: ' . BASE_URL . '/index.php?page=dashboard');
+            header('Location: ' . BASE_URL . '/?page=dashboard');
             exit;
         }
 
         $error = null;
-        $timeoutMessage = Session::flash('_timeout_message');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            CSRF::verify();
+            // CSRF verification
+            if (!CSRF::verify()) {
+                $error = 'csrf';
+                require APP_ROOT . '/views/auth/login.php';
+                return;
+            }
 
             $username = trim($_POST['username'] ?? '');
             $password = $_POST['password'] ?? '';
 
-            // Validation
-            if (empty($username) || empty($password)) {
-                $error = 'Please enter both username and password.';
-            } else {
-                $result = Auth::attempt($username, $password);
+            if ($username === '' || $password === '') {
+                $error = 'empty';
+                require APP_ROOT . '/views/auth/login.php';
+                return;
+            }
 
-                if ($result['success']) {
-                    // Role-based redirection
-                    $redirect = $_GET['redirect'] ?? $_POST['redirect'] ?? '';
-                    if ($redirect && str_starts_with($redirect, '/')) {
-                        header('Location: ' . $redirect);
-                    } else {
-                        header('Location: ' . BASE_URL . '/index.php?page=dashboard');
-                    }
+            $result = Auth::attempt($username, $password);
+
+            switch ($result['status']) {
+                case 'success':
+                    header('Location: ' . BASE_URL . '/?page=dashboard');
                     exit;
-                } else {
-                    $error = $result['message'];
-                }
+
+                case 'invalid_password':
+                    $error = 'invalid_password';
+                    break;
+
+                case 'invalid_username':
+                    $error = 'invalid_username';
+                    break;
+
+                case 'rate_limited':
+                    $error = 'rate_limited';
+                    break;
+
+                default:
+                    $error = 'generic';
+                    break;
             }
         }
 

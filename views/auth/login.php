@@ -76,11 +76,24 @@
                     </div>
                 <?php endif; ?>
 
-                <?php if (!empty($error)): ?>
-                    <div class="alert alert-danger">
-                        <i class="bi bi-exclamation-triangle-fill"></i> <?= htmlspecialchars($error) ?>
-                    </div>
-                <?php endif; ?>
+                <?php
+$errorMessages = [
+    'invalid_password' => 'Invalid password. Please try again.',
+    'invalid_username' => 'Invalid username. Please check your username and try again.',
+    'rate_limited'     => 'Too many failed login attempts. Please wait 15 minutes and try again.',
+    'empty'            => 'Please enter both your username and password.',
+    'csrf'             => 'Your session expired. Please refresh the page and try again.',
+    'generic'          => 'Unable to log in at this time. Please try again later.',
+];
+$errorMsg = (!empty($error) && isset($errorMessages[$error]))
+            ? $errorMessages[$error]
+            : (!empty($error) ? $error : null);
+?>
+<?php if ($errorMsg): ?>
+    <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle-fill"></i> <?= htmlspecialchars($errorMsg, ENT_QUOTES, 'UTF-8') ?>
+    </div>
+<?php endif; ?>
 
                 <form method="POST" action="<?= BASE_URL ?>/login.php<?= !empty($_GET['redirect']) ? '?redirect=' . urlencode($_GET['redirect']) : '' ?>" novalidate>
                     <?= CSRF::field() ?>

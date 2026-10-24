@@ -46,22 +46,19 @@ class CSRF
     /**
      * Verify CSRF token from POST request
      */
-    public static function verify(): void
+        /**
+     * Verify CSRF token from POST request.
+     * Returns true on success, false on failure (does NOT die).
+     */
+    public static function verify(): bool
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $token = $_POST['_csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
-
-            if (!self::validateToken($token)) {
-                http_response_code(403);
-                if (self::isAjax()) {
-                    header('Content-Type: application/json');
-                    echo json_encode(['error' => 'Invalid security token. Please refresh and try again.']);
-                } else {
-                    die('Security token validation failed. Please go back and try again.');
-                }
-                exit;
-            }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return true;
         }
+
+        $token = $_POST['_csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? null;
+
+        return self::validateToken($token);
     }
 
     private static function isAjax(): bool

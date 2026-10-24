@@ -71,4 +71,21 @@ class User extends BaseModel
                 FROM users";
         return self::db()->query($sql)->fetch();
     }
+
+    /**
+     * Find a user by username OR email.
+     * Returns the user record (array) if found, or null.
+     */
+    public static function findByUsernameOrEmail(string $identifier): ?array
+    {
+        $sql = "SELECT u.*, r.role_name 
+                FROM users u
+                LEFT JOIN roles r ON u.role_id = r.role_id
+                WHERE u.username = ? OR u.email = ?
+                LIMIT 1";
+        $stmt = self::db()->prepare($sql);
+        $stmt->execute([$identifier, $identifier]);
+        $row = $stmt->fetch();
+        return $row ?: null;
+    }
 }

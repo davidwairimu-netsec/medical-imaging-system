@@ -6,87 +6,104 @@ class Auth
 {
     private static ?array $user = null;
 
+    /**
+     * Attempt to authenticate a user.
+     *
+     * Returns:
+     *   ['status' => 'success'|'invalid_username'|'invalid_password'|'rate_limited', 'user' => array|null]
+     */
+    /**
+     * Attempt to authenticate a user.
+     *
+     * Returns:
+     *   ['status' => 'success'|'invalid_username'|'invalid_password'|'rate_limited', 'user' => array|null]
+     */
     public static function attempt(string $username, string $password): array
     {
         $db = Database::getInstance();
+        $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 
-        $stmt = $db->prepare("
-            SELECT u.*, r.role_name 
-            FROM users u
-            INNER JOIN roles r ON u.role_id = r.role_id
-            WHERE u.username = :username OR u.email = :email
-            LIMIT 1
-        ");
-        $stmt->execute([':username' => $username, ':email' => $username]);
-        $user = $stmt->fetch();
+        // Rate limit: max 5 failures in last 15 minutes (per username OR IP)
+        $maxAttempts = 5;
+        $lockoutMinutes = 15;
+
+        $sql = "SELECT COUNT(*) AS cnt
+                FROM login_attempts
+                WHERE (username = :username OR ip_address = :ip)
+                  AND success = 0
+                  AND attempt_time > (NOW() - INTERVAL " . (int)$lockoutMinutes . " MINUTE)";
+        $stmt = $db->prepare($sql);
+        $stmt->execute([':username' => $username, ':ip' => $ip]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ((int) $row['cnt'] >= $maxAttempts) {
+            self::recordAttempt($username, $ip, false);
+            self::logFailedAttempt($username, 'rate_limited');
+            return ['status' => 'rate_limited', 'user' => null];
+        }
+
+        // Look up user (by username OR email)
+        $user = User::findByUsernameOrEmail($username);
 
         if (!$user) {
-            self::logFailedAttempt($username, 'User not found');
-            return ['success' => false, 'message' => 'Invalid username or password.'];
+            self::recordAttempt($username, $ip, false);
+            self::logFailedAttempt($username, 'unknown_username');
+            return ['status' => 'invalid_username', 'user' => null];
         }
 
-        // Check account status
-        if ($user['account_status'] === STATUS_DISABLED) {
-            self::logFailedAttempt($username, 'Account disabled');
-            return ['success' => false, 'message' => 'Your account has been disabled. Contact administrator.'];
-        }
-
-        if ($user['account_status'] === STATUS_LOCKED) {
-            self::logFailedAttempt($username, 'Account locked');
-            return ['success' => false, 'message' => 'Your account is locked. Contact administrator.'];
-        }
-
-        // Check lockout
-        if ($user['failed_login_attempts'] >= MAX_LOGIN_ATTEMPTS) {
-            $db->prepare("UPDATE users SET account_status = 'locked' WHERE user_id = ?")
-               ->execute([$user['user_id']]);
-            self::logFailedAttempt($username, 'Account locked due to too many failed attempts');
-            return ['success' => false, 'message' => 'Account locked due to too many failed attempts.'];
+        // Check account status — return same as invalid_username to prevent enumeration
+        if (($user['account_status'] ?? 'active') !== 'active') {
+            self::recordAttempt($username, $ip, false);
+            self::logFailedAttempt($username, 'account_' . ($user['account_status'] ?? 'unknown'));
+            return ['status' => 'invalid_username', 'user' => null];
         }
 
         // Verify password
         if (!password_verify($password, $user['password_hash'])) {
-            $attempts = $user['failed_login_attempts'] + 1;
-            $status = $attempts >= MAX_LOGIN_ATTEMPTS ? 'locked' : 'active';
+            self::recordAttempt($username, $ip, false);
 
-            $db->prepare("UPDATE users SET failed_login_attempts = ?, account_status = ? WHERE user_id = ?")
-               ->execute([$attempts, $status, $user['user_id']]);
+            $upd = $db->prepare("UPDATE users SET failed_login_attempts = failed_login_attempts + 1 WHERE user_id = :user_id");
+            $upd->execute([':user_id' => $user['user_id']]);
 
-            self::logFailedAttempt($username, 'Invalid password');
-            return ['success' => false, 'message' => 'Invalid username or password.'];
+            self::logFailedAttempt($username, 'wrong_password');
+            return ['status' => 'invalid_password', 'user' => $user];
         }
 
-        // Successful login
-        $db->prepare("
-            UPDATE users 
-            SET failed_login_attempts = 0, last_login = NOW(), account_status = 'active' 
-            WHERE user_id = ?
-        ")->execute([$user['user_id']]);
+        // Success — reset counters
+        self::recordAttempt($username, $ip, true);
 
-        // Regenerate session
-        Session::regenerate();
+        $reset = $db->prepare("UPDATE users SET failed_login_attempts = 0, last_login = NOW() WHERE user_id = :user_id");
+        $reset->execute([':user_id' => $user['user_id']]);
 
-        $_SESSION['user_id'] = $user['user_id'];
-        $_SESSION['username'] = $user['username'];
+        // Preserve CSRF token across session regeneration
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $csrfToken = $_SESSION['_csrf_token'] ?? null;
+            $csrfTime  = $_SESSION['_csrf_token_time'] ?? null;
+            session_regenerate_id(true);
+            if ($csrfToken !== null) {
+                $_SESSION['_csrf_token'] = $csrfToken;
+                $_SESSION['_csrf_token_time'] = $csrfTime;
+            }
+        }
+
+        $_SESSION['user_id']   = (int) $user['user_id'];
+        $_SESSION['username']  = $user['username'];
         $_SESSION['full_name'] = $user['full_name'];
-        $_SESSION['role'] = $user['role_name'];
-        $_SESSION['role_id'] = $user['role_id'];
-        $_SESSION['logged_in_at'] = time();
-
-        self::$user = $user;
+        $_SESSION['role']      = $user['role_name'] ?? null;
+        $_SESSION['role_id']   = (int) $user['role_id'];
+        $_SESSION['last_activity'] = time();
 
         // Log successful login
         AuditLog::create([
             'user_id' => $user['user_id'],
-            'action' => AUDIT_LOGIN,
+            'action' => 'USER_LOGIN',
             'entity_type' => 'user',
             'entity_id' => $user['user_id'],
             'description' => 'User logged in successfully',
         ]);
 
-        return ['success' => true, 'user' => $user];
+        return ['status' => 'success', 'user' => $user];
     }
-
     public static function check(): bool
     {
         return isset($_SESSION['user_id']);
@@ -179,6 +196,22 @@ class Auth
         Session::destroy();
     }
 
+
+    /**
+     * Record a login attempt for rate limiting.
+     */
+    private static function recordAttempt(string $username, string $ip, bool $success): void
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare(
+            "INSERT INTO login_attempts (username, ip_address, success) VALUES (:u, :ip, :s)"
+        );
+        $stmt->execute([
+            ':u'  => $username,
+            ':ip' => $ip,
+            ':s'  => $success ? 1 : 0,
+        ]);
+    }
     private static function logFailedAttempt(string $username, string $reason): void
     {
         try {
